@@ -1,0 +1,3 @@
+isotope-stock-bundle.controller:
+  resource: '@IsotopeStockBundle/Controller'
+  type: annotation

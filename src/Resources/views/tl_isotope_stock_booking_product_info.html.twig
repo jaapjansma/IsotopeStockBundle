@@ -1,0 +1,61 @@
+{% extends "@ContaoCore/Backend/be_page.html.twig" %}
+
+{% block headline %}
+    {{ title }}
+{% endblock %}
+
+{% block error %}{% endblock %}
+
+{% block main %}
+    <div class="tl_listing_container">
+        <div class="tl_content_right">{{  image|raw }}</div>
+        <h3>{{ title }}</h3>
+        <div class="clear"></div>
+        <br />
+        {% set index = 0 %}
+        <table class="tl_listing showColumns">
+            <tr>
+                <th class="tl_folder_tlist">
+                    {{ 'IstotopeStockProductInfo.Account'|trans({}, 'contao_default') }}
+                </th>
+                <th class="tl_folder_tlist tl_right_nowrap">
+                    {{ 'IstotopeStockProductInfo.Debit'|trans({}, 'contao_default') }}
+                </th>
+                <th class="tl_folder_tlist tl_right_nowrap">
+                    {{ 'IstotopeStockProductInfo.Credit'|trans({}, 'contao_default') }}
+                </th>
+                <th class="tl_folder_tlist tl_right_nowrap">
+                    {{ 'IstotopeStockProductInfo.Balance'|trans({}, 'contao_default') }}
+                </th>
+            </tr>
+        {% for typeId,type in stockPerAccountType %}
+            {% set index = index + 1 %}
+            <tr class="{%  if index is odd %}odd{%  endif %}">
+                <td class="tl_file_list" colspan="4"><strong>{{ type.label }}</strong></td>
+            </tr>
+            {% for account in stockPerAccount %}
+                {% if account.type == typeId %}
+                    {% set index = index + 1 %}
+                    <tr class="{%  if index is odd %}odd{%  endif %}">
+                        <td class="tl_file_list">{{ account.title }}</td>
+                        <td class="tl_file_list tl_right_nowrap">{{ account.debit }}</td>
+                        <td class="tl_file_list tl_right_nowrap">{{ account.credit }}</td>
+                        <td class="tl_file_list tl_right_nowrap">{{ account.balance }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            {% set index = index + 1 %}
+            <tr class="{%  if index is odd %}odd{%  endif %}">
+                <td class="tl_file_list">&nbsp;</td>
+                <td class="tl_file_list tl_right_nowrap" colspan="2"><strong>{{ type.label }}</strong></td>
+                <td class="tl_file_list tl_right_nowrap"><strong>{{ type.balance }}</strong></td>
+            </tr>
+        {% endfor %}
+        </table>
+    </div>
+    <div class="tl_formbody_submit">
+        <div class="tl_submit_container">
+            <a href="{{  closeUrl|raw }}" class="button">{{ 'IstotopeStockProductInfo.CloseButton'|trans({}, 'contao_default') }}</a>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,11 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+
+  Krabo\IsotopeStockBundle\Controller\ProductController: ~
+  Krabo\IsotopeStockBundle\Controller\BookingController: ~
+  Krabo\IsotopeStockBundle\EventListener\ProductListener:
+    public: true
+  Krabo\IsotopeStockBundle\EventListener\ProductCollectionListener:
+    public: true

@@ -1,0 +1,141 @@
+<?php
+/**
+ * Copyright (C) 2022  Jaap Jansma (jaap.jansma@civicoop.org)
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+namespace Krabo\IsotopeStockBundle\Helper;
+
+use Contao\Image;
+use Contao\StringUtil;
+use Isotope\Model\Product;
+use Krabo\IsotopeStockBundle\Model\AccountModel;
+
+class ProductHelper {
+
+  /**
+   * @var array
+   */
+  private static $productAccounts = [];
+
+  /**
+   * @var array
+   */
+  private static $productAccountTypes = [];
+
+  /**
+   * Returns information of how many products are booked on a certain account.
+   *
+   * Returns the account id, account title, account type, debit, credit and balance
+   *
+   * @param int $product_id
+   * @return array
+   */
+  public static function getProductStockPerAccount(int $product_id) {
+    self::loadStockInfoForProduct($product_id);
+    return self::$productAccounts[$product_id];
+  }
+
+  /**
+   * Returns information on how many products are booked on a certain account type.
+   * Excludes the other account type.
+   *
+   * @param int $product_id
+   * @return array
+   */
+  public static function getProductStockPerAccountType(int $product_id) {
+    self::loadStockInfoForProduct($product_id);
+    return self::$productAccountTypes[$product_id];
+  }
+
+  /**
+   * Load information about the stock for a certain product.
+   *
+   * @param int $product_id
+   * @return void
+   */
+  private static function loadStockInfoForProduct(int $product_id) {
+    if (isset(self::$productAccounts[$product_id])) {
+      return;
+    }
+    \Contao\System::loadLanguageFile('tl_isotope_stock_account');
+    $db = \Database::getInstance();
+    $accountQueryResult = $db->prepare("SELECT * FROM `tl_isotope_stock_account` ORDER BY `type`, `title`")->execute();
+    $accounts = [];
+    $accountTypeBalance = [];
+    while($accountQueryResult->next()) {
+      $account_id = $accountQueryResult->id;
+      $accounts[$account_id] = $accountQueryResult->row();
+      $accounts[$account_id]['title'] = html_entity_decode($accounts[$account_id]['title']);
+      $accounts[$account_id]['type_label'] = $GLOBALS['TL_LANG']['tl_isotope_stock_account']['type_options'][$accountQueryResult->type];
+      $accounts[$account_id]['debit'] = 0;
+      $accounts[$account_id]['credit'] = 0;
+      $accounts[$account_id]['balance'] = 0;
+      if ($accountQueryResult->type && !isset($accountTypeBalance[$accountQueryResult->type])) {
+        $accountTypeBalance[$accountQueryResult->type]['balance'] = 0;
+        $accountTypeBalance[$accountQueryResult->type]['label'] = $GLOBALS['TL_LANG']['tl_isotope_stock_account']['type_options'][$accountQueryResult->type];
+      }
+    }
+
+    $productInfoQuery = "
+      SELECT
+        SUM(`tl_isotope_stock_booking_line`.`debit`) AS `debit`,
+        SUM(`tl_isotope_stock_booking_line`.`credit`) AS `credit`,
+        (SUM(`tl_isotope_stock_booking_line`.`debit`) - SUM(`tl_isotope_stock_booking_line`.`credit`)) AS `balance`,
+         `tl_isotope_stock_booking_line`.`account`
+      FROM `tl_isotope_stock_booking_line`
+      LEFT JOIN `tl_isotope_stock_booking` ON `tl_isotope_stock_booking`.`id` = `tl_isotope_stock_booking_line`.`pid`
+      LEFT JOIN `tl_isotope_stock_period` ON `tl_isotope_stock_period`.`id` = `tl_isotope_stock_booking`.`period_id` AND `tl_isotope_stock_period`.`active` = '1'
+      WHERE `tl_isotope_stock_booking`.`product_id` = ? OR `tl_isotope_stock_booking`.`product_id` IS NULL 
+      GROUP BY `tl_isotope_stock_booking_line`.`account`
+    ";
+    $productInfoQueryResult = $db->prepare($productInfoQuery)->execute($product_id);
+
+    while($productInfoQueryResult->next()) {
+      $accounts[$productInfoQueryResult->account]['debit'] = $productInfoQueryResult->debit;
+      $accounts[$productInfoQueryResult->account]['credit'] = $productInfoQueryResult->credit;
+      $accounts[$productInfoQueryResult->account]['balance'] = $productInfoQueryResult->balance;
+      if (isset($accountTypeBalance[$accounts[$productInfoQueryResult->account]['type']])) {
+        $accountTypeBalance[$accounts[$productInfoQueryResult->account]['type']]['balance'] += $productInfoQueryResult->balance;
+      }
+    }
+
+    self::$productAccounts[$product_id] = $accounts;
+    self::$productAccountTypes[$product_id] = $accountTypeBalance;
+  }
+
+  /**
+   * Generates a button to view the stock
+   *
+   * @param $product_id
+   * @return string
+   */
+  public static function genereateStockButtonLink($product_id) {
+    \Contao\System::loadLanguageFile(\Isotope\Model\Product::getTable());
+    $router = \Contao\System::getContainer()->get('router');
+    $url = $router->generate('tl_isotope_stock_booking_product_info', ['id' => $product_id]);
+    $icon = "bundles/isotopestock/out_of_stock.png";
+    $objProduct = Product::findByPk($product_id);
+    $stockPerAccountType = self::getProductStockPerAccountType($product_id);
+    if ($objProduct->isostock_preorder) {
+      $icon = "bundles/isotopestock/pre_order.png";
+    } elseif (isset($stockPerAccountType[AccountModel::STOCK_TYPE]) && $stockPerAccountType[AccountModel::STOCK_TYPE]['balance'] > 0) {
+      $icon = "bundles/isotopestock/stock_ok.png";
+    }
+    $title = $GLOBALS['TL_LANG']['tl_iso_product']['stock'];
+    return '<a href="' . $url . '" title="' . StringUtil::specialchars($title) . '">' . Image::getHtml($icon, $title, 'style="width: 16px; height: 16px;"') . '</a> ';
+  }
+
+}
