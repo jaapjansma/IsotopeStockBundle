@@ -2,7 +2,7 @@
   "name":"krabo/isotope-stock-bundle",
   "description":"Isotope Stock.",
   "type": "contao-bundle",
-  "license":"AGP-3.0",
+  "license":"AGPL-3.0-or-later",
   "version": "1.0.0",
   "require": {
     "contao/core-bundle": "^4.9",
