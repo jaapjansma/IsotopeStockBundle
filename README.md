@@ -1,8 +1,10 @@
 # IsotopeStockBundle
 
-Contao Isotope Stock Bundle.
+Contao Isotope Stock Extension.
 
 This adds advanced stock management to isotope. Developed for Jan van Haasteren Puzzels to manage their stock.
+
+This extension is developed specifically for Jan van Haasteren. Feel free to re-use
 
 ## Contributions
 

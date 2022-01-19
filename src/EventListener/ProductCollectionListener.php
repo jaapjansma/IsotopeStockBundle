@@ -55,7 +55,7 @@ class ProductCollectionListener {
       return $intQuantity;
     }
     Message::addInfo(sprintf($GLOBALS['TL_LANG']['IsotopeStockProductInfoNotInStock'], $objProduct->getName()));
-    return $intQuantity;
+    return 0;
   }
 
   /**

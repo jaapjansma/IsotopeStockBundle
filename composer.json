@@ -7,7 +7,8 @@
   "require": {
     "contao/core-bundle": "^4.9",
     "isotope/isotope-core": "^2.6",
-    "terminal42/contao-tablelookupwizard": "~3.2"
+    "terminal42/contao-tablelookupwizard": "~3.2",
+    "symfony/form": "4.4.*"
   },
   "extra": {
     "contao-manager-plugin": "Krabo\\IsotopeStockBundle\\ContaoManager\\Plugin"

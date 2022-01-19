@@ -55,7 +55,7 @@ class BookingModel extends Model {
    *
    * @return void
    */
-  public static function createBookingFromOrderAndProduct(Order $order, ProductCollectionItem $item, int $debit_account_id, int $crebit_account_id, int $bookingType) {
+  public static function createBookingFromOrderAndProduct(Order $order, ProductCollectionItem $item, int $debit_account_id, int $credit_account_id, int $bookingType) {
     if (!BookingModel::doesBookingExistsForOrder($order,$bookingType)) {
       $period = PeriodModel::getFirstActivePeriod();
       $booking = new BookingModel();
@@ -73,7 +73,7 @@ class BookingModel extends Model {
       $debitBookingLine->save();
       $creditBookingLine = new BookingLineModel();
       $creditBookingLine->credit = $item->quantity;
-      $creditBookingLine->account = $crebit_account_id;
+      $creditBookingLine->account = $credit_account_id;
       $creditBookingLine->pid = $booking->id;
       $creditBookingLine->save();
       BookingHelper::updateBalanceStatusForBooking($booking->id);

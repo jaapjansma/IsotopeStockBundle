@@ -35,4 +35,15 @@ class PeriodModel extends Model {
     ]);
   }
 
+  /**
+   * Returns the first active period found.
+   *
+   * @return PeriodModel
+   */
+  public static function getAllActivePeriods() {
+    return self::findOneBy('active', '1', [
+      'order' => 'id ASC',
+    ]);
+  }
+
 }

@@ -55,6 +55,14 @@ $GLOBALS['TL_DCA']['tl_isotope_stock_booking'] = array
     ),
     'global_operations' => array
     (
+      'mass_booking' => array
+      (
+        'label'               =>  $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['new_mass_booking'],
+        'route'               => 'tl_isotope_stock_booking_mass_booking',
+        'class'               => 'mass_booking',
+        'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="c"',
+        'icon'                => 'tablewizard.svg',
+      ),
       'update_balance_status' => array
       (
         'label'               =>  $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['update_balance_status'],

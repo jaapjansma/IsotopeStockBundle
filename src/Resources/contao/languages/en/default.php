@@ -25,6 +25,6 @@ $GLOBALS['TL_LANG']['IstotopeStockProductInfo']['Debit'] = 'Debit';
 $GLOBALS['TL_LANG']['IstotopeStockProductInfo']['Credit'] = 'Credit';
 $GLOBALS['TL_LANG']['IstotopeStockProductInfo']['Balance'] = 'Balance';
 $GLOBALS['TL_LANG']['IstotopeStockProductInfo']['CloseButton'] = 'Close';
-$GLOBALS['TL_LANG']['IsotopeStockProductInfoNotInStock'] = 'Product %s is not in stock. It could take a while before it gets delivered';
+$GLOBALS['TL_LANG']['IsotopeStockProductInfoNotInStock'] = 'Product %s is not in stock.';
 $GLOBALS['TL_LANG']['IsotopeStockProductInfoNotAvailableForPreOrder'] = 'Product %s is not available for pre-order'.
 $GLOBALS['TL_LANG']['MSC']['saveAndViewStock'] = 'Save & View Stock';
