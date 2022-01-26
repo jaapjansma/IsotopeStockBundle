@@ -9,114 +9,117 @@
 {% block error %}{% endblock %}
 
 {% block main %}
-<div class="tl_listing_container">
+    <div class="tl_listing_container">
 
-    {{ form_start(form) }}
-    {{ form_errors(form) }}
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
 
-    <fieldset class="tl_tbox nolegend">
-        <div class="widget">
-            <h3>{{ form_label(form.description) }}</h3>
-            {{ form_widget(form.description) }}
-        </div>
-    </fieldset>
+        <fieldset class="tl_tbox nolegend">
+            <div class="widget">
+                <h3>{{ form_label(form.description) }}</h3>
+                {{ form_widget(form.description) }}
+            </div>
+        </fieldset>
 
-    <fieldset class="tl_tbox nolegend">
-        <div class="w50 widget">
-            <h3>{{ form_label(form.date) }}</h3>
-            {{ form_widget(form.date) }}
-        </div>
+        <fieldset class="tl_tbox nolegend">
+            <div class="w50 widget">
+                <h3>{{ form_label(form.date) }}</h3>
+                {{ form_widget(form.date) }}
+            </div>
 
-        <div class="w50 widget">
-            <h3>{{ form_label(form.period_id) }}</h3>
-            {{ form_widget(form.period_id) }}
-        </div>
-    </fieldset>
+            <div class="w50 widget">
+                <h3>{{ form_label(form.period_id) }}</h3>
+                {{ form_widget(form.period_id) }}
+            </div>
+        </fieldset>
 
-    <fieldset class="tl_tbox nolegend">
-        <div class="w50 widget">
-            <h3>{{ form_label(form.debit_account) }}</h3>
-            {{ form_widget(form.debit_account) }}
-        </div>
+        <fieldset class="tl_tbox nolegend">
+            <div class="w50 widget">
+                <h3>{{ form_label(form.debit_account) }}</h3>
+                {{ form_widget(form.debit_account) }}
+            </div>
 
-        <div class="w50 widget">
-            <h3>{{ form_label(form.credit_account) }}</h3>
-            {{ form_widget(form.credit_account) }}
-        </div>
-    </fieldset>
+            <div class="w50 widget">
+                <h3>{{ form_label(form.credit_account) }}</h3>
+                {{ form_widget(form.credit_account) }}
+            </div>
+        </fieldset>
 
-    <fieldset class="tl_tbox nolegend">
-        <div class="widget">
-            <fieldset class="tl_radio_container">
-            <legend>{{ form.type.vars.label }} <span class="mandatory">*</span></legend>
-                {{ form_widget(form.type) }}
-            </fieldset>
-        </div>
-    </fieldset>
+        <fieldset class="tl_tbox nolegend">
+            <div class="widget">
+                <fieldset class="tl_radio_container">
+                    <legend>{{ form.type.vars.label }} <span class="mandatory">*</span></legend>
+                    {{ form_widget(form.type) }}
+                </fieldset>
+            </div>
+        </fieldset>
 
-    <fieldset class="tl_tbox nolegend">
-        <div class="widget">
-            <h3>{{ form_label(form.product_ids) }}</h3>
+        <fieldset class="tl_tbox nolegend">
+            <div class="widget">
+                <h3>{{ form_label(form.product_ids) }}</h3>
 
-            <table class="tl_listing">
-                <thead>
+                <table class="tl_listing">
+                    <thead>
                     <tr>
                         <th class="tl_folder_tlist row row_0 row_even row_first">{{ 'tl_isotope_stock_booking.sku'|trans({}, 'contao_tl_isotope_stock_booking') }}</th>
                         <th class="tl_folder_tlist row row_0 row_even row_first">{{ 'tl_isotope_stock_booking.quantity'|trans({}, 'contao_tl_isotope_stock_booking') }}</th>
                         <th class="tl_folder_tlist row row_0 row_even row_first">&nbsp;</th>
                     </tr>
-                </thead>
-                <tbody id="product_ids-fields-list" data-prototype="{{ _self.product_id_prototype(form.product_ids.vars.prototype)|e }}" data-counter="{{ form.product_ids|length }}">
+                    </thead>
+                    <tbody id="product_ids-fields-list"
+                           data-prototype="{{ _self.product_id_prototype(form.product_ids.vars.prototype)|e }}"
+                           data-counter="{{ form.product_ids|length }}">
                     {% for productIdField in form.product_ids %}
                         {{ _self.product_id_prototype(productIdField) }}
                     {% endfor %}>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
 
+                <div class="tl_submit_container">
+                    <button type="button" class="add-another-collection-widget tl_submit"
+                            data-selector="#product_ids-fields-list">{{ 'tl_isotope_stock_booking.addProduct'|trans({}, 'contao_tl_isotope_stock_booking') }}</button>
+                </div>
+            </div>
+        </fieldset>
+        {% do form.product_ids.setRendered %}
+
+
+        <div class="clear"></div>
+        <div class="tl_formbody_submit">
             <div class="tl_submit_container">
-            <button type="button" class="add-another-collection-widget tl_submit" data-selector="#product_ids-fields-list">{{ 'tl_isotope_stock_booking.addProduct'|trans({}, 'contao_tl_isotope_stock_booking') }}</button>
+                {{ form_row(form.save) }}
             </div>
         </div>
-    </fieldset>
-    {% do form.product_ids.setRendered %}
 
-
-    <div class="clear"></div>
-    <div class="tl_formbody_submit">
-        <div class="tl_submit_container">
-            {{ form_row(form.save) }}
-        </div>
+        {{ form_end(form) }}
     </div>
+    <script src="{{ asset('jquery/js/jquery.min.js') }}"></script>
+    <script type="text/javascript">
+      jQuery(document).ready(function () {
+        jQuery('.add-another-collection-widget').click(function (e) {
+          var selector = jQuery(jQuery(this).attr('data-selector'));
+          // Try to find the counter of the list or use the length of the list
+          var counter = selector.data('data-counter') || selector.children().length;
+          var currentCounter = counter;
 
-    {{ form_end(form) }}
-</div>
-<script src="{{ asset('jquery/js/jquery.min.js') }}"></script>
-<script type="text/javascript">
-  jQuery(document).ready(function () {
-    jQuery('.add-another-collection-widget').click(function (e) {
-      var selector = jQuery(jQuery(this).attr('data-selector'));
-      // Try to find the counter of the list or use the length of the list
-      var counter = selector.data('data-counter') || selector.children().length;
-      var currentCounter = counter;
+          // grab the prototype template
+          var newWidget = selector.attr('data-prototype');
+          // replace the "__name__" used in the id and name of the prototype
+          // with a number that's unique to your emails
+          // end name attribute looks like name="contact[emails][2]"
+          newWidget = newWidget.replace(/__name__/g, counter);
+          // Increase the counter
+          counter++;
+          // And store it, the length cannot be used if deleting widgets is allowed
+          selector.data('widget-counter', counter);
 
-      // grab the prototype template
-      var newWidget = selector.attr('data-prototype');
-      // replace the "__name__" used in the id and name of the prototype
-      // with a number that's unique to your emails
-      // end name attribute looks like name="contact[emails][2]"
-      newWidget = newWidget.replace(/__name__/g, counter);
-      // Increase the counter
-      counter++;
-      // And store it, the length cannot be used if deleting widgets is allowed
-      selector.data('widget-counter', counter);
-
-      // create a new list element and add it to the list
-      var newElem = jQuery(newWidget);
-      newElem.appendTo(selector);
-      jQuery('#form_product_ids_' + currentCounter + '_sku').focus();
-    });
-  });
-</script>
+          // create a new list element and add it to the list
+          var newElem = jQuery(newWidget);
+          newElem.appendTo(selector);
+          jQuery('#form_product_ids_' + currentCounter + '_sku').focus();
+        });
+      });
+    </script>
 {% endblock %}
 
 {% block choice_widget_expanded %}
@@ -124,7 +127,7 @@
         {%- for child in form %}
             {{- form_widget(child) -}}
             {{- form_label(child, null, {translation_domain: choice_translation_domain}) -}}
-            <br />
+            <br/>
         {% endfor -%}
     </div>
 {% endblock choice_widget_expanded %}
@@ -171,8 +174,11 @@
             {{ form_widget(childForm.quantity) }}
         </td>
         <td>
-            <a class="delete" title="{{ 'tl_isotope_stock_booking.delete_product_id'|trans({}, 'contao_tl_isotope_stock_booking') }}" href="#" onclick="jQuery(this).parent().parent().remove(); return false;">
-                <img src="system/themes/flexible/icons/delete.svg" alt="{{ 'tl_isotope_stock_booking.delete_product_id'|trans({}, 'contao_tl_isotope_stock_booking') }}">
+            <a class="delete"
+               title="{{ 'tl_isotope_stock_booking.delete_product_id'|trans({}, 'contao_tl_isotope_stock_booking') }}"
+               href="#" onclick="jQuery(this).parent().parent().remove(); return false;">
+                <img src="system/themes/flexible/icons/delete.svg"
+                     alt="{{ 'tl_isotope_stock_booking.delete_product_id'|trans({}, 'contao_tl_isotope_stock_booking') }}">
             </a>
         </td>
     </tr>

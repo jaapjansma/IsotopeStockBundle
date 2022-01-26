@@ -33,14 +33,15 @@ class BookingModel extends Model {
 
   /**
    * @param \Isotope\Model\ProductCollection\Order $objOrder
+   * @param $product_id
    * @param int $type
    *
    * @return bool
    */
-  public static function doesBookingExistsForOrder(Order $objOrder, int $bookingType) {
+  public static function doesBookingExistsForOrderAndProduct(Order $objOrder, $product_id, int $bookingType) {
     return (bool) \Database::getInstance()
-      ->prepare("SELECT * FROM `tl_isotope_stock_booking` WHERE `order_id` = ? AND `type` = ?")
-      ->execute($objOrder->id, $bookingType)
+      ->prepare("SELECT * FROM `tl_isotope_stock_booking` WHERE `order_id` = ? AND `product_id` = ? AND `type` = ?")
+      ->execute($objOrder->id, $product_id, $bookingType)
       ->count();
   }
 
@@ -56,7 +57,7 @@ class BookingModel extends Model {
    * @return void
    */
   public static function createBookingFromOrderAndProduct(Order $order, ProductCollectionItem $item, int $debit_account_id, int $credit_account_id, int $bookingType) {
-    if (!BookingModel::doesBookingExistsForOrder($order,$bookingType)) {
+    if (!BookingModel::doesBookingExistsForOrderAndProduct($order,$item->getProduct()->getId(), $bookingType)) {
       $period = PeriodModel::getFirstActivePeriod();
       $booking = new BookingModel();
       $booking->description = $order->getDocumentNumber();

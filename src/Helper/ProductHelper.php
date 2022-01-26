@@ -49,6 +49,43 @@ class ProductHelper {
   }
 
   /**
+   * Returns the number of products available at this account.
+   *
+   * @param int $product_id
+   * @param int $account_id
+   *
+   * @return int
+   */
+  public static function getProductCountPerAccount(int $product_id, int $account_id): int {
+    self::loadStockInfoForProduct($product_id);
+    if (isset(self::$productAccounts[$product_id][$account_id])) {
+      return self::$productAccounts[$product_id][$account_id]['balance'];
+    }
+    return 0;
+  }
+
+  /**
+   * Check whether a product is available to order
+   *
+   * @param int $product_id
+   * @param int $quantity
+   *
+   * @return bool
+   */
+  public static function isProductAvailableToOrder(int $product_id, int $quantity=1): bool {
+    $objProduct = Product::findByPk($product_id);
+    $stockAccountType = ProductHelper::getProductStockPerAccountType($product_id);
+    if ($objProduct->isostock_preorder) {
+      if (isset($stockAccountType[AccountModel::PRE_ORDER_TYPE]) && isset($stockAccountType[AccountModel::PRE_ORDER_TYPE]['balance']) && $stockAccountType[AccountModel::PRE_ORDER_TYPE]['balance'] >= $quantity) {
+        return true; // Product is available for pre-order.
+      }
+    } elseif (isset($stockAccountType[AccountModel::STOCK_TYPE]) && isset($stockAccountType[AccountModel::STOCK_TYPE]['balance']) && $stockAccountType[AccountModel::STOCK_TYPE]['balance'] >= $quantity) {
+      return true; // Product is available for ordering
+    }
+    return false; // Product is not available for ordering.
+  }
+
+  /**
    * Returns information on how many products are booked on a certain account type.
    * Excludes the other account type.
    *

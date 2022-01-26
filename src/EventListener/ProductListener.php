@@ -19,11 +19,8 @@
 namespace Krabo\IsotopeStockBundle\EventListener;
 
 use Contao\DataContainer;
-use Contao\Image;
 use Contao\Message;
-use Contao\StringUtil;
 use Krabo\IsotopeStockBundle\Helper\ProductHelper;
-use Krabo\IsotopeStockBundle\Model\AccountModel;
 use Symfony\Component\Routing\RouterInterface;
 
 class ProductListener {
