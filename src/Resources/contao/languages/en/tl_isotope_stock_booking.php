@@ -43,6 +43,6 @@ $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['period_placeholder'] = ' - Sele
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['product_ids'] = 'Products';
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['addProduct'] = 'Add product';
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['saveMassBooking'] = 'Save';
-$GLOBALS['TL_LANG']['tl_isotope_stock_booking']['sku'] = 'Product SKU';
+$GLOBALS['TL_LANG']['tl_isotope_stock_booking']['sku'] = 'Product Number';
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['quantity'] = 'Quantity';
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['delete_product_id'] = 'Remove product';

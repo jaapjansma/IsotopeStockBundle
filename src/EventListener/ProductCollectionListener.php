@@ -19,17 +19,13 @@
 namespace Krabo\IsotopeStockBundle\EventListener;
 
 use Isotope\Interfaces\IsotopeProduct;
-use Isotope\Isotope;
 use Isotope\Message;
 use Isotope\Model\Config;
 use Isotope\Model\OrderStatus;
 use Isotope\Model\ProductCollection\Order;
-use Krabo\IsotopeStockBundle\Helper\BookingHelper;
 use Krabo\IsotopeStockBundle\Helper\ProductHelper;
 use Krabo\IsotopeStockBundle\Model\AccountModel;
-use Krabo\IsotopeStockBundle\Model\BookingLineModel;
 use Krabo\IsotopeStockBundle\Model\BookingModel;
-use Krabo\IsotopeStockBundle\Model\PeriodModel;
 
 class ProductCollectionListener {
 

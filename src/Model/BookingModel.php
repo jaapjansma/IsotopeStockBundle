@@ -62,7 +62,7 @@ class BookingModel extends Model {
       $booking = new BookingModel();
       $booking->description = $order->getDocumentNumber();
       $booking->date = time();
-      $booking->period = $period->id;
+      $booking->period_id = $period->id;
       $booking->product_id = $item->getProduct()->getId();
       $booking->type = $bookingType;
       $booking->order_id = $order->id;
