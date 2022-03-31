@@ -22,6 +22,7 @@ $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['description'] = ['Description',
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['date'] = ['Date', ''];
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['period_id'] = ['Period', ''];
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['product_legend'] = 'Product';
+$GLOBALS['TL_LANG']['tl_isotope_stock_booking']['product_count'] = ['Product couunt', ''];
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['product_id'] = ['Product', ''];
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['order_id'] = ['Order', ''];
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['order_legend'] = 'Order';

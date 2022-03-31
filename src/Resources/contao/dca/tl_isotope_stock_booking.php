@@ -45,12 +45,13 @@ $GLOBALS['TL_DCA']['tl_isotope_stock_booking'] = array
     (
       'mode'                    => 1,
       'fields'                  => array('date','tstamp'),
-      'flag'                    => 8,
+      'flag'                    => 12,
       'panelLayout'             => 'sort,filter,search,limit'
     ),
     'label' => array
     (
-      'fields'                  => array('description', 'type'),
+      'showColumns'             => true,
+      'fields'                  => array('description', 'type', 'date', 'product_count', 'product_id', 'order_id'),
       'label_callback'          => array('tl_isotope_stock_booking', 'generateLabel')
     ),
     'global_operations' => array
@@ -150,10 +151,15 @@ $GLOBALS['TL_DCA']['tl_isotope_stock_booking'] = array
       'sql'                     => "int(10) unsigned NOT NULL default 0",
       'default'                 => '0',
     ),
+    'product_count' => array
+    (
+    ),
     'product_id'     => array
     (
       'inputType'               => 'tableLookup',
       'sql'                     => "int(10) unsigned NOT NULL default 0",
+      'filter'                  => true,
+      'foreignKey'              => \Isotope\Model\Product::getTable().'.CONCAT(name, \' \', sku)',
       'eval' => array
       (
         'mandatory'                 => true,
@@ -252,17 +258,38 @@ class tl_isotope_stock_booking {
    *
    * @return string
    */
-  public function generateLabel($arrData, $strLabel, \Contao\DataContainer $dc, $arrColumns) {
+  public function generateLabel($arrData, string $label, \Contao\DataContainer $dc, $labels) {
+    $fields = $GLOBALS['TL_DCA'][$dc->table]['list']['label']['fields'];
+    $description_key = array_search('description', $fields, true);
+    $product_count_key = array_search('product_count', $fields, true);
+    $product_id_key = array_search('product_id', $fields, true);
+    $order_id_key = array_search('order_id', $fields, true);
     $balanceLabel = $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['in_balance'];
     $balanceIcon = 'ok.gif';
     if (empty($arrData['is_in_balance'])) {
       $balanceLabel = $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['not_in_balance'];
       $balanceIcon = 'error.gif';
     }
-    $strLabel = \Image::getHtml($balanceIcon, $balanceLabel, 'title="'.$balanceLabel.'"') . '&nbsp;' . $strLabel;
-    $type = $arrData['type'];
-    $strLabel .= ' - '.$GLOBALS['TL_LANG']['tl_isotope_stock_booking']['type_options'][$type];
-    return $strLabel;
+    $bookingLines = \Krabo\IsotopeStockBundle\Model\BookingLineModel::findBy('pid', $arrData['id']);
+    $debit = 0;
+    if ($bookingLines && $bookingLines->count()) {
+      foreach ($bookingLines as $bookingLine) {
+        $debit += $bookingLine->debit;
+      }
+    }
+    $labels[$product_count_key] = $debit;
+    if ($labels[$product_id_key]) {
+      $objProduct = \Isotope\Model\Product::findByPk($labels[$product_id_key]);
+      $labels[$product_id_key] = $objProduct->name;
+    }
+    if (!empty($labels[$order_id_key])) {
+      $objOrder = \Isotope\Model\ProductCollection\Order::findByPk($labels[$order_id_key]);
+      $labels[$order_id_key] = $objOrder->document_number;
+    } else {
+      $labels[$order_id_key] = '';
+    }
+    $labels[$description_key] = \Image::getHtml($balanceIcon, $balanceLabel, 'title="'.$balanceLabel.'"') . '&nbsp;' . $labels[$description_key];
+    return $labels;
   }
 
 }

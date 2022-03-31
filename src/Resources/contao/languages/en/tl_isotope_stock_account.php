@@ -21,4 +21,4 @@ $GLOBALS['TL_LANG']['tl_isotope_stock_account']['title'] = ['Title', ''];
 $GLOBALS['TL_LANG']['tl_isotope_stock_account']['type'] = ['Type', ''];
 $GLOBALS['TL_LANG']['tl_isotope_stock_account']['type_options']['1'] = 'Stock';
 $GLOBALS['TL_LANG']['tl_isotope_stock_account']['type_options']['2'] = 'Pre-Order';
-$GLOBALS['TL_LANG']['tl_isotope_stock_account']['type_options']['3'] = 'Balance';
+$GLOBALS['TL_LANG']['tl_isotope_stock_account']['type_options']['3'] = 'Other';

@@ -22,6 +22,7 @@ $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['description'] = ['Omschrijving'
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['date'] = ['Datum', ''];
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['period_id'] = ['Periode', ''];
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['product_legend'] = 'Product';
+$GLOBALS['TL_LANG']['tl_isotope_stock_booking']['product_count'] = ['Aantal', ''];
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['product_id'] = ['Product', ''];
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['order_id'] = ['Bestelling', ''];
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['order_legend'] = 'Bestelling';

@@ -193,13 +193,21 @@ class BookingController extends AbstractController
           $booking->type = $data['type'];
           $booking->save();
           $debitBookingLine = new BookingLineModel();
-          $debitBookingLine->debit = $product_id['quantity'];
-          $debitBookingLine->account = $data['debit_account']->id;
+          $debitBookingLine->debit = abs($product_id['quantity']);
+          if ($product_id['quantity'] >= 0) {
+            $debitBookingLine->account = $data['debit_account']->id;
+          } else {
+            $debitBookingLine->account = $data['credit_account']->id;
+          }
           $debitBookingLine->pid = $booking->id;
           $debitBookingLine->save();
           $creditBookingLine = new BookingLineModel();
-          $creditBookingLine->credit = $product_id['quantity'];
-          $creditBookingLine->account = $data['credit_account']->id;
+          $creditBookingLine->credit = abs($product_id['quantity']);
+          if ($product_id['quantity'] >= 0) {
+            $creditBookingLine->account = $data['credit_account']->id;
+          } else {
+            $creditBookingLine->account = $data['debit_account']->id;
+          }
           $creditBookingLine->pid = $booking->id;
           $creditBookingLine->save();
           BookingHelper::updateBalanceStatusForBooking($booking->id);

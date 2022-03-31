@@ -13,6 +13,7 @@
         <div class="clear"></div>
         <br />
         {% set index = 0 %}
+        {% set balance = 0 %}
         <table class="tl_listing showColumns">
             <tr>
                 <th class="tl_folder_tlist">
@@ -45,12 +46,18 @@
                 {% endif %}
             {% endfor %}
             {% set index = index + 1 %}
+            {% set balance = balance + type.balance %}
             <tr class="{%  if index is odd %}odd{%  endif %}">
                 <td class="tl_file_list">&nbsp;</td>
                 <td class="tl_file_list tl_right_nowrap" colspan="2"><strong>{{ type.label }}</strong></td>
                 <td class="tl_file_list tl_right_nowrap"><strong>{{ type.balance }}</strong></td>
             </tr>
         {% endfor %}
+        <tr class="{%  if index is odd %}odd{%  endif %}">
+            <td class="tl_file_list">&nbsp;</td>
+            <td class="tl_file_list tl_right_nowrap" colspan="2"><strong>{{ 'IstotopeStockProductInfo.Balance'|trans({}, 'contao_default') }}</strong></td>
+            <td class="tl_file_list tl_right_nowrap"><strong>{{ balance }}</strong></td>
+        </tr>
         </table>
     </div>
     <div class="tl_formbody_submit">

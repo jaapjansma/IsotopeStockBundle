@@ -19,4 +19,3 @@
 $GLOBALS['TL_LANG']['tl_iso_product']['stock'] = 'View Stock';
 $GLOBALS['TL_LANG']['tl_iso_product']['isostock_legend'] = 'Isotope Stock';
 $GLOBALS['TL_LANG']['tl_iso_product']['isostock_preorder'] = ['Product Pre-Order', 'The Product is available for pre-order.'];
-$GLOBALS['TL_LANG']['tl_iso_product']['isostock_preorder_date'] = ['Product available at', 'The product will be available at'];

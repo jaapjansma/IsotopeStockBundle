@@ -157,13 +157,13 @@ class tl_isotope_stock_booking_line {
   public function headerFields($arrRow, \Contao\DataContainer $dc) {
     \Contao\System::loadLanguageFile(\Isotope\Model\Product::getTable());
     $productIdField = $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['product_id'][0];
-    $objProduct = Product::findByPk($arrRow[$productIdField]);
+    $booking = \Krabo\IsotopeStockBundle\Model\BookingModel::findByPk($dc->id);
+    $objProduct = Product::findByPk($booking->product_id);
     $stockButton = ProductHelper::genereateStockButtonLink($objProduct->id);
     $editUrl = \Contao\DataContainer::addToUrl('do=iso_products&table=tl_iso_product&act=edit&id='.$objProduct->id);
     $editIcon = Image::getHtml('edit.gif', $GLOBALS['TL_LANG']['tl_iso_product']['edit'][0]);
     $editButton = '<a href="'.$editUrl.'">' . $editIcon . '</a>';
-    $label = $objProduct->name . ' (' . $objProduct->sku.')';
-    $arrRow[$productIdField] = $label .'&nbsp;' . $editButton . '&nbsp;' . $stockButton;
+    $arrRow[$productIdField] .= '&nbsp;' . $editButton . '&nbsp;' . $stockButton;
 
     $balanceLabel = $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['in_balance'];
     $balanceIcon = 'ok.gif';

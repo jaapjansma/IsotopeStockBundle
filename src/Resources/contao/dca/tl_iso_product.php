@@ -28,22 +28,10 @@ $GLOBALS['TL_DCA']['tl_iso_product']['list']['operations']['stock'] = [
   'button_callback'  => [ProductListener::class, 'stockButtonCallback']
 ];
 
-$GLOBALS['TL_DCA']['tl_iso_product']['palettes']['__selector__'][] = 'isostock_preorder';
-$GLOBALS['TL_DCA']['tl_iso_product']['subpalettes']['isostock_preorder'] = 'isostock_preorder_date';
-
 $GLOBALS['TL_DCA']['tl_iso_product']['fields']['isostock_preorder'] = [
   'filter'                => true,
   'inputType'             => 'checkbox',
   'eval'                  => array('tl_class'=>'w50', 'submitOnChange' => true),
   'attributes'            => array( 'legend'=>'isostock_legend' ),
   'sql'                   => "char(1) NOT NULL default ''"
-];
-
-$GLOBALS['TL_DCA']['tl_iso_product']['fields']['isostock_preorder_date'] = [
-  'inputType'               => 'text',
-  'flag'                    => 8,
-  'default'                 => time(),
-  'eval'                    => array('mandatory'=>true, 'rgxp'=>'date', 'datepicker'=>true, 'tl_class'=>'w50 wizard'),
-  //'attributes'              => array( 'legend'=>'isostock_legend' ),
-  'sql'                     => "varchar(10) NOT NULL default ''"
 ];
