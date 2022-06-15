@@ -22,7 +22,9 @@ use Isotope\Interfaces\IsotopeProduct;
 use Isotope\Message;
 use Isotope\Model\Config;
 use Isotope\Model\OrderStatus;
+use Isotope\Model\ProductCollection;
 use Isotope\Model\ProductCollection\Order;
+use Isotope\Model\ProductCollectionItem;
 use Krabo\IsotopeStockBundle\Helper\ProductHelper;
 use Krabo\IsotopeStockBundle\Model\AccountModel;
 use Krabo\IsotopeStockBundle\Model\BookingModel;
@@ -39,7 +41,7 @@ class ProductCollectionListener {
    *
    * @return mixed
    */
-  public function addProductToCollection(IsotopeProduct $objProduct, $intQuantity, \Isotope\Model\ProductCollection $collection, $arrConfig) {
+  public function addProductToCollection(IsotopeProduct $objProduct, $intQuantity, ProductCollection $collection, $arrConfig) {
     $stockAccountType = ProductHelper::getProductStockPerAccountType($objProduct->getId());
     if ($objProduct->isostock_preorder) {
       if (isset($stockAccountType[AccountModel::PRE_ORDER_TYPE]) && isset($stockAccountType[AccountModel::PRE_ORDER_TYPE]['balance']) && $stockAccountType[AccountModel::PRE_ORDER_TYPE]['balance'] >= $intQuantity) {
@@ -52,6 +54,64 @@ class ProductCollectionListener {
     }
     Message::addInfo(sprintf($GLOBALS['TL_LANG']['IsotopeStockProductInfoNotInStock'], $objProduct->getName()));
     return 0;
+  }
+
+  /**
+   * Check quantity in stock
+   *
+   * @param \Isotope\Model\ProductCollectionItem $item
+   * @param $arrSet
+   * @param \Isotope\Model\ProductCollection $collection
+   *
+   * @return mixed
+   */
+  public function updateItemInCollection(ProductCollectionItem $item, $arrSet, ProductCollection $collection) {
+    $intQuantity = $arrSet['quantity'];
+    $objProduct = $item->getProduct();
+    if (!$objProduct) {
+      return $arrSet;
+    }
+    $stockAccountType = ProductHelper::getProductStockPerAccountType($objProduct->getId());
+    if ($objProduct->isostock_preorder) {
+      if (isset($stockAccountType[AccountModel::PRE_ORDER_TYPE]) && isset($stockAccountType[AccountModel::PRE_ORDER_TYPE]['balance']) && $stockAccountType[AccountModel::PRE_ORDER_TYPE]['balance'] >= $intQuantity) {
+        return $arrSet;
+      } elseif (isset($stockAccountType[AccountModel::PRE_ORDER_TYPE]) && isset($stockAccountType[AccountModel::PRE_ORDER_TYPE]['balance'])) {
+        $arrSet['quantity'] = $stockAccountType[AccountModel::PRE_ORDER_TYPE]['balance'];
+      }
+      Message::addInfo(sprintf($GLOBALS['TL_LANG']['IsotopeStockProductInfoNotAvailableForPreOrder'], $objProduct->getName()));
+      return $arrSet;
+    } elseif (isset($stockAccountType[AccountModel::STOCK_TYPE]) && isset($stockAccountType[AccountModel::STOCK_TYPE]['balance']) && $stockAccountType[AccountModel::STOCK_TYPE]['balance'] >= $intQuantity) {
+      return $arrSet;
+    } elseif (isset($stockAccountType[AccountModel::STOCK_TYPE]) && isset($stockAccountType[AccountModel::STOCK_TYPE]['balance'])) {
+      $arrSet['quantity'] = $stockAccountType[AccountModel::STOCK_TYPE]['balance'];
+    }
+    Message::addInfo(sprintf($GLOBALS['TL_LANG']['IsotopeStockProductInfoNotInStock'], $objProduct->getName()));
+    return $arrSet;
+  }
+
+  /**
+   * @param \Isotope\Model\ProductCollectionItem $item
+   *
+   * @return false|null
+   */
+  public function itemIsAvailable(ProductCollectionItem $item) {
+    $intQuantity = $item->quantity;
+    $objProduct = $item->getProduct();
+    if (!$objProduct) {
+      return null;
+    }
+    $stockAccountType = ProductHelper::getProductStockPerAccountType($objProduct->getId());
+    if ($objProduct->isostock_preorder) {
+      if (isset($stockAccountType[AccountModel::PRE_ORDER_TYPE]) && isset($stockAccountType[AccountModel::PRE_ORDER_TYPE]['balance']) && $stockAccountType[AccountModel::PRE_ORDER_TYPE]['balance'] >= $intQuantity) {
+        return null;
+      }
+      Message::addInfo(sprintf($GLOBALS['TL_LANG']['IsotopeStockProductInfoNotAvailableForPreOrder'], $objProduct->getName()));
+      return FALSE;
+    } elseif (isset($stockAccountType[AccountModel::STOCK_TYPE]) && isset($stockAccountType[AccountModel::STOCK_TYPE]['balance']) && $stockAccountType[AccountModel::STOCK_TYPE]['balance'] >= $intQuantity) {
+      return null;
+    }
+    Message::addInfo(sprintf($GLOBALS['TL_LANG']['IsotopeStockProductInfoNotInStock'], $objProduct->getName()));
+    return FALSE;
   }
 
   /**

@@ -40,6 +40,8 @@ array_insert($GLOBALS['BE_MOD']['isotope_stock'], 0, array
 ));
 
 $GLOBALS['ISO_HOOKS']['addProductToCollection'][] = [ProductCollectionListener::class, 'addProductToCollection'];
+$GLOBALS['ISO_HOOKS']['updateItemInCollection'][] = [ProductCollectionListener::class, 'updateItemInCollection'];
+$GLOBALS['ISO_HOOKS']['itemIsAvailable'][] = [ProductCollectionListener::class, 'itemIsAvailable'];
 $GLOBALS['ISO_HOOKS']['postOrderStatusUpdate'][] = [ProductCollectionListener::class, 'postOrderStatusUpdate'];
 
 $GLOBALS['TL_MODELS']['tl_isotope_stock_account'] = \Krabo\IsotopeStockBundle\Model\AccountModel::class;

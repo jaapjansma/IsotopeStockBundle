@@ -23,7 +23,7 @@ $GLOBALS['TL_DCA']['tl_iso_product']['edit']['buttons_callback'][] = [ProductLis
 $GLOBALS['TL_DCA']['tl_iso_product']['list']['operations']['stock'] = [
   'label'             => &$GLOBALS['TL_LANG']['tl_iso_product']['stock'],
   //'icon'              => 'rows.svg',
-  'icon'              => '@IsotopeStock/Resources/public/stok_ok.png',
+  'icon'              => '@IsotopeStock/Resources/public/stock_ok.png',
   'route'             => 'tl_isotope_stock_booking_product_info',
   'button_callback'  => [ProductListener::class, 'stockButtonCallback']
 ];
