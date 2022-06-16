@@ -20,6 +20,16 @@ use \Krabo\IsotopeStockBundle\EventListener\ProductListener;
 
 $GLOBALS['TL_DCA']['tl_iso_product']['config']['onsubmit_callback'][] = [ProductListener::class, 'onSubmitCallback'];
 $GLOBALS['TL_DCA']['tl_iso_product']['edit']['buttons_callback'][] = [ProductListener::class, 'editButtonCallback'];
+
+$GLOBALS['TL_DCA']['tl_iso_product']['list']['global_operations']['stock_report'] = array
+(
+  'label'               =>  $GLOBALS['TL_LANG']['tl_isotope_prodocut']['stock_report'],
+  'route'               => 'tl_isotope_stock_booking_overview',
+  'class'               => 'stock_report',
+  'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="c"',
+  'icon'                => 'tablewizard.svg',
+);
+
 $GLOBALS['TL_DCA']['tl_iso_product']['list']['operations']['stock'] = [
   'label'             => &$GLOBALS['TL_LANG']['tl_iso_product']['stock'],
   //'icon'              => 'rows.svg',

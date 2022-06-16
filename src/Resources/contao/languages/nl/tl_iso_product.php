@@ -19,3 +19,4 @@
 $GLOBALS['TL_LANG']['tl_iso_product']['stock'] = 'Bekijk voorraad';
 $GLOBALS['TL_LANG']['tl_iso_product']['isostock_legend'] = 'Isotope Voorraad';
 $GLOBALS['TL_LANG']['tl_iso_product']['isostock_preorder'] = ['Product Pre-Order', 'Is beschikbaar voor Pre-Order.'];
+$GLOBALS['TL_LANG']['tl_isotope_prodocut']['stock_report'] ='Voorraad rapport';

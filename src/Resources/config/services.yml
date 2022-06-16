@@ -5,6 +5,7 @@ services:
 
   Krabo\IsotopeStockBundle\Controller\ProductController: ~
   Krabo\IsotopeStockBundle\Controller\BookingController: ~
+  Krabo\IsotopeStockBundle\Controller\OverviewController: ~
   Krabo\IsotopeStockBundle\EventListener\ProductListener:
     public: true
   Krabo\IsotopeStockBundle\EventListener\ProductCollectionListener:
