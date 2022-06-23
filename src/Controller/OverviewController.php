@@ -83,7 +83,7 @@ class OverviewController extends AbstractController
     $accounts = AccountModel::findAll(['order' => 'title ASC']);
     $column = 'E';
     foreach($accounts as $account) {
-      $sheet->setCellValue($column.'1', $account->title);
+      $sheet->setCellValue($column.'1', html_entity_decode($account->title));
       $sheet->getColumnDimension($column)->setAutoSize(TRUE);
       $sheet->getStyle($column.'1')->getFont()->setBold(TRUE);
       $sheet->getStyle($column.'1')->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_TEXT);
@@ -94,11 +94,11 @@ class OverviewController extends AbstractController
     $db = Database::getInstance();
     $products = $db->prepare("SELECT id, name, sku FROM tl_iso_product WHERE `pid` = '0' ORDER BY sku ASC, name ASC")->execute();
     $i = 2;
-    while($products->next()) {
-      $product = $products->fetchAssoc();
+    while($product = $products->fetchAssoc()) {
       if (empty($product['name']) && empty($product['sku'])) {
         continue;
       }
+
       $sheet->setCellValue('A'.$i, html_entity_decode($product['name']));
       $sheet->getStyle('A'.$i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_TEXT);
       $sheet->setCellValue('B'.$i, $product['sku']);
