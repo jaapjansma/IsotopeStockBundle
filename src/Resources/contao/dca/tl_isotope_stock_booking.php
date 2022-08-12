@@ -16,6 +16,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+use Contao\System;
+use Krabo\IsotopeStockBundle\Event\Events;
+use Krabo\IsotopeStockBundle\Event\ManualBookingEvent;
+use Krabo\IsotopeStockBundle\Model\BookingModel;
+
 \Contao\System::loadLanguageFile(\Isotope\Model\Product::getTable());
 \Contao\Controller::loadDataContainer(\Isotope\Model\Product::getTable());
 \Contao\System::loadLanguageFile(\Isotope\Model\ProductCollection::getTable());
@@ -35,7 +40,10 @@ $GLOBALS['TL_DCA']['tl_isotope_stock_booking'] = array
       (
         'id' => 'primary'
       )
-    )
+    ),
+    'onsubmit_callback' => array(
+      array('tl_isotope_stock_booking_line', 'onSubmit'),
+    ),
   ),
 
   // List
@@ -290,6 +298,13 @@ class tl_isotope_stock_booking {
     }
     $labels[$description_key] = \Image::getHtml($balanceIcon, $balanceLabel, 'title="'.$balanceLabel.'"') . '&nbsp;' . $labels[$description_key];
     return $labels;
+  }
+
+  public function onSubmit(\Contao\DataContainer $dc) {
+    $event = new ManualBookingEvent(BookingModel::findByPk($dc->id));
+    System::getContainer()
+      ->get('event_dispatcher')
+      ->dispatch($event, Events::MANUAL_BOOKING_EVENT);
   }
 
 }

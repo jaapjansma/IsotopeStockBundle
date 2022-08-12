@@ -19,9 +19,12 @@
 use Contao\Image;
 use Contao\StringUtil;
 use Isotope\Model\Product;
+use Krabo\IsotopeStockBundle\Event\Events;
+use Krabo\IsotopeStockBundle\Event\ManualBookingEvent;
 use \Krabo\IsotopeStockBundle\Helper\BookingHelper;
 use Krabo\IsotopeStockBundle\Helper\ProductHelper;
 use Krabo\IsotopeStockBundle\Model\AccountModel;
+use Krabo\IsotopeStockBundle\Model\BookingModel;
 
 $GLOBALS['TL_DCA']['tl_isotope_stock_booking_line'] = array
 (
@@ -157,7 +160,7 @@ class tl_isotope_stock_booking_line {
   public function headerFields($arrRow, \Contao\DataContainer $dc) {
     \Contao\System::loadLanguageFile(\Isotope\Model\Product::getTable());
     $productIdField = $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['product_id'][0];
-    $booking = \Krabo\IsotopeStockBundle\Model\BookingModel::findByPk($dc->id);
+    $booking = BookingModel::findByPk($dc->id);
     $objProduct = Product::findByPk($booking->product_id);
     $stockButton = ProductHelper::genereateStockButtonLink($objProduct->id);
     $editUrl = \Contao\DataContainer::addToUrl('do=iso_products&table=tl_iso_product&act=edit&id='.$objProduct->id);
@@ -185,6 +188,10 @@ class tl_isotope_stock_booking_line {
    */
   public function onSubmit(\Contao\DataContainer $dc) {
     BookingHelper::updateBalanceStatusForBooking($dc->activeRecord->pid);
+    $event = new ManualBookingEvent(BookingModel::findByPk($dc->activeRecord->pid));
+    System::getContainer()
+      ->get('event_dispatcher')
+      ->dispatch($event, Events::MANUAL_BOOKING_EVENT);
   }
 
 }

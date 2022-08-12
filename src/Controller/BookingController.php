@@ -21,6 +21,8 @@ namespace Krabo\IsotopeStockBundle\Controller;
 use Contao\CoreBundle\Csrf\ContaoCsrfTokenManager;
 use Contao\System;
 use Isotope\Model\Product;
+use Krabo\IsotopeStockBundle\Event\Events;
+use Krabo\IsotopeStockBundle\Event\ManualBookingEvent;
 use Krabo\IsotopeStockBundle\Form\Type\AccountType;
 use Krabo\IsotopeStockBundle\Form\Type\ProductSkuQuantityType;
 use Krabo\IsotopeStockBundle\Helper\BookingHelper;
@@ -211,6 +213,11 @@ class BookingController extends AbstractController
           $creditBookingLine->pid = $booking->id;
           $creditBookingLine->save();
           BookingHelper::updateBalanceStatusForBooking($booking->id);
+
+          $event = new ManualBookingEvent($booking);
+          System::getContainer()
+            ->get('event_dispatcher')
+            ->dispatch($event, Events::MANUAL_BOOKING_EVENT);
         }
       }
       $url = $this->generateUrl('contao_backend', ['do' => 'tl_isotope_stock_booking']);
