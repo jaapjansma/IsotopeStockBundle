@@ -18,23 +18,29 @@
 
 namespace Krabo\IsotopeStockBundle\Form\Type;
 
+use Krabo\IsotopeStockBundle\Validator\ValidProduct;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\GreaterThanOrEqual;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ProductSkuQuantityType extends AbstractType
 {
   public function buildForm(FormBuilderInterface $builder, array $options): void
   {
-    $builder->add('sku', TextType::class, [
+    $sku = $builder->add('sku', TextType::class, [
       'label' => $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['sku'],
       'attr' => [
         'class' => 'tl_text',
       ],
       'row_attr' => [
         'class' => 'widget w50'
+      ],
+      'constraints' => [
+        new ValidProduct(),
       ],
     ]);
     $builder->add('quantity', NumberType::class, [
@@ -45,6 +51,10 @@ class ProductSkuQuantityType extends AbstractType
       'row_attr' => [
         'class' => 'widget w50'
       ],
+      'constraints' => [
+        new NotBlank(),
+        new GreaterThanOrEqual(['value' => 1]),
+      ]
     ]);
   }
 

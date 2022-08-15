@@ -9,6 +9,7 @@
     "isotope/isotope-core": "^2.6",
     "terminal42/contao-tablelookupwizard": "~3.2",
     "symfony/form": "4.4.*",
+    "symfony/validator": "4.4.*",
     "phpoffice/phpspreadsheet": "^1.23"
   },
   "extra": {

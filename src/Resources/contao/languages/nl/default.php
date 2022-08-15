@@ -31,4 +31,5 @@ $GLOBALS['TL_LANG']['IstotopeStockProductInfo']['Stock'] = 'Voorraad';
 $GLOBALS['TL_LANG']['IstotopeStockProductInfo']['PreOrder'] = 'Pre-Order';
 $GLOBALS['TL_LANG']['IsotopeStockProductInfoNotInStock'] = 'Product %s is niet op voorraad.';
 $GLOBALS['TL_LANG']['IsotopeStockProductInfoNotAvailableForPreOrder'] = 'Product %s is niet beschikbaar voor pre-order'.
+$GLOBALS['TL_LANG']['IsotopeStockProductNotFound'] = 'Product %s bestaat niet';
 $GLOBALS['TL_LANG']['MSC']['saveAndViewStock'] = 'Opslaan & Bekijk Voorraad';

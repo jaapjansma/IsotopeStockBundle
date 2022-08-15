@@ -31,4 +31,5 @@ $GLOBALS['TL_LANG']['IstotopeStockProductInfo']['Stock'] = 'Stock';
 $GLOBALS['TL_LANG']['IstotopeStockProductInfo']['PreOrder'] = 'Pre-Order';
 $GLOBALS['TL_LANG']['IsotopeStockProductInfoNotInStock'] = 'Product %s is not in stock.';
 $GLOBALS['TL_LANG']['IsotopeStockProductInfoNotAvailableForPreOrder'] = 'Product %s is not available for pre-order'.
+$GLOBALS['TL_LANG']['IsotopeStockProductNotFound'] = 'Product %s is not available';
 $GLOBALS['TL_LANG']['MSC']['saveAndViewStock'] = 'Save & View Stock';
