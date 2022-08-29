@@ -30,6 +30,15 @@ $GLOBALS['TL_DCA']['tl_iso_product']['list']['global_operations']['stock_report'
   'icon'                => 'tablewizard.svg',
 );
 
+$GLOBALS['TL_DCA']['tl_iso_product']['list']['global_operations']['stock_report_all'] = array
+(
+  'label'               =>  $GLOBALS['TL_LANG']['tl_isotope_prodocut']['stock_report_all'],
+  'route'               => 'tl_isotope_stock_booking_overview_all',
+  'class'               => 'stock_report',
+  'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="c"',
+  'icon'                => 'tablewizard.svg',
+);
+
 $GLOBALS['TL_DCA']['tl_iso_product']['list']['operations']['stock'] = [
   'label'             => &$GLOBALS['TL_LANG']['tl_iso_product']['stock'],
   //'icon'              => 'rows.svg',

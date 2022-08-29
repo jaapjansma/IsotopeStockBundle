@@ -89,7 +89,6 @@ class BookingController extends AbstractController
    */
   public function massBooking(Request $request): Response
   {
-
     $GLOBALS['TL_JAVASCRIPT'][] = 'assets/jquery/js/jquery.min.js|static';
     $response = new Response();
     \Contao\System::loadLanguageFile(BookingModel::getTable());

@@ -29,6 +29,7 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -53,12 +54,22 @@ class OverviewController extends AbstractController
   }
 
   /**
-   * @Route("/contao/tl_isotope_stock_booking/overview",
+   * @Route("/contao/tl_isotope_stock_booking/overview_all",
+   *     name="tl_isotope_stock_booking_overview_all",
+   *     defaults={"_scope": "backend", "_token_check": true}
+   * )
+   */
+  public function overviewAll(Request $request): Response {
+    return $this->overview($request, false);
+  }
+
+  /**
+   * @Route("/contao/tl_isotope_stock_booking/overview/{onlyActive}",
    *     name="tl_isotope_stock_booking_overview",
    *     defaults={"_scope": "backend", "_token_check": true}
    * )
    */
-  public function overview(): Response
+  public function overview(Request $request, bool $onlyActive=true): Response
   {
     \Contao\System::loadLanguageFile('default');
     $spreadsheet = new Spreadsheet();
@@ -91,8 +102,13 @@ class OverviewController extends AbstractController
     }
     $sheet->freezePane('A2');
 
+    $sql = "SELECT id, name, sku FROM tl_iso_product WHERE `pid` = '0'";
+    if ($onlyActive) {
+      $sql .= " AND `published` = '1'";
+    }
+    $sql .= " ORDER BY sku ASC, name ASC";
     $db = Database::getInstance();
-    $products = $db->prepare("SELECT id, name, sku FROM tl_iso_product WHERE `pid` = '0' ORDER BY sku ASC, name ASC")->execute();
+    $products = $db->prepare($sql)->execute();
     $i = 2;
     while($product = $products->fetchAssoc()) {
       if (empty($product['name']) && empty($product['sku'])) {
