@@ -18,10 +18,15 @@
 
 namespace Krabo\IsotopeStockBundle\Event;
 
-class Events {
+use Krabo\IsotopeStockBundle\Model\BookingModel;
 
-  const MANUAL_BOOKING_EVENT = 'krabo.isotope_stock.manual_booking';
+class BookingEvent {
 
-  const BOOKING_EVENT = 'krabo.isotope_stock.booking';
+  /** @var \Krabo\IsotopeStockBundle\Model\BookingModel */
+  public $bookingModel;
+
+  public function __construct(BookingModel $bookingModel) {
+    $this->bookingModel = $bookingModel;
+  }
 
 }

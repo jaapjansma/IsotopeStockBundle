@@ -19,8 +19,11 @@
 namespace Krabo\IsotopeStockBundle\Model;
 
 use Contao\Model;
+use Contao\System;
 use Isotope\Model\ProductCollection\Order;
 use Isotope\Model\ProductCollectionItem;
+use Krabo\IsotopeStockBundle\Event\BookingEvent;
+use Krabo\IsotopeStockBundle\Event\Events;
 use Krabo\IsotopeStockBundle\Helper\BookingHelper;
 
 class BookingModel extends Model {
@@ -94,6 +97,11 @@ class BookingModel extends Model {
       $creditBookingLine->pid = $booking->id;
       $creditBookingLine->save();
       BookingHelper::updateBalanceStatusForBooking($booking->id);
+
+      $event = new BookingEvent($booking);
+      System::getContainer()
+        ->get('event_dispatcher')
+        ->dispatch($event, Events::BOOKING_EVENT);
     }
   }
 
