@@ -46,6 +46,22 @@ class BookingModel extends Model {
   }
 
   /**
+   * @param \Isotope\Model\ProductCollection\Order $objOrder
+   * @param int $type
+   *
+   * @return bool
+   */
+  public static function deleteBookingOrderAndProduct(Order $objOrder, int $bookingType) {
+    $bookings = BookingModel::findAll([
+      'column' => ['order_id = ?', 'type = ?'],
+      'value' => [$objOrder->id, $bookingType],
+    ]);
+    while($bookings->next()) {
+      $bookings->delete();
+    }
+  }
+
+  /**
    * Creates a new booking for a Product Collection Item
    *
    * @param \Isotope\Model\ProductCollection\Order $order

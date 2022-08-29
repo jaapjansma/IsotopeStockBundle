@@ -139,6 +139,8 @@ class ProductCollectionListener {
       foreach($order->getItems() as $item) {
         BookingModel::createBookingFromOrderAndProduct($order, $item, $config->isotopestock_order_credit_account, $config->isotopestock_store_account, BookingModel::DELIVERY_TYPE);
       }
+    } elseif ($objNewStatus->isotopestock_process_cancel_booking && $order->isLocked() && $order->isCheckoutComplete()) {
+      BookingModel::deleteBookingOrderAndProduct($order, BookingModel::SALES_TYPE);
     }
   }
 

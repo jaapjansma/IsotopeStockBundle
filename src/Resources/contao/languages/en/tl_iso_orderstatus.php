@@ -17,3 +17,4 @@
  */
 
 $GLOBALS['TL_LANG']['tl_iso_orderstatus']['isotopestock_process_delivery_booking'] = ['Isotope Stock Delivery', 'When the order reaches this status then it will create a delivery booking'];
+$GLOBALS['TL_LANG']['tl_iso_orderstatus']['isotopestock_process_cancel_booking'] = ['Isotope Stock Cancel Booking', 'When the order reaches this status then it will cancel the booking'];

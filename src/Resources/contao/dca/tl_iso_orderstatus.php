@@ -25,6 +25,14 @@ $GLOBALS['TL_DCA']['tl_iso_orderstatus']['fields']['isotopestock_process_deliver
   'sql'                   => "char(1) NOT NULL default ''"
 ];
 
+$GLOBALS['TL_DCA']['tl_iso_orderstatus']['fields']['isotopestock_process_cancel_booking'] = [
+  'exclude'               => true,
+  'inputType'             => 'checkbox',
+  'eval'                  => array('tl_class'=>'w50'),
+  'sql'                   => "char(1) NOT NULL default ''"
+];
+
 PaletteManipulator::create()
   ->addField('isotopestock_process_delivery_booking', 'paid', PaletteManipulator::POSITION_AFTER)
+  ->addField('isotopestock_process_cancel_booking', 'paid', PaletteManipulator::POSITION_AFTER)
   ->applyToPalette('default', 'tl_iso_orderstatus');

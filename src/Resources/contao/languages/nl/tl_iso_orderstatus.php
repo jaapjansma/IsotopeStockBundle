@@ -17,3 +17,4 @@
  */
 
 $GLOBALS['TL_LANG']['tl_iso_orderstatus']['isotopestock_process_delivery_booking'] = ['Isotope Voorraad Levering', 'Als de bestelling deze status krijg maak een voorraad boeking aan in het magazijn. Bijv als het product de status geleverd krijgt.'];
+$GLOBALS['TL_LANG']['tl_iso_orderstatus']['isotopestock_process_cancel_booking'] = ['Isotope Stock Annuleer Boeking', 'Annuleer de boeking als de bestelling deze status krijgt'];
