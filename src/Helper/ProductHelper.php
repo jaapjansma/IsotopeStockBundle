@@ -131,10 +131,12 @@ class ProductHelper {
         SUM(`tl_isotope_stock_booking_line`.`debit`) AS `debit`,
         SUM(`tl_isotope_stock_booking_line`.`credit`) AS `credit`,
         (SUM(`tl_isotope_stock_booking_line`.`debit`) - SUM(`tl_isotope_stock_booking_line`.`credit`)) AS `balance`,
-         `tl_isotope_stock_booking_line`.`account`
+         `tl_isotope_stock_booking_line`.`account`,
+         `tl_isotope_stock_account`.`type`
       FROM `tl_isotope_stock_booking_line`
       LEFT JOIN `tl_isotope_stock_booking` ON `tl_isotope_stock_booking`.`id` = `tl_isotope_stock_booking_line`.`pid`
       LEFT JOIN `tl_isotope_stock_period` ON `tl_isotope_stock_period`.`id` = `tl_isotope_stock_booking`.`period_id` AND `tl_isotope_stock_period`.`active` = '1'
+      LEFT JOIN `tl_isotope_stock_account` ON `tl_isotope_stock_account`.`id` = `tl_isotope_stock_booking_line`.`account`
       WHERE `tl_isotope_stock_booking`.`product_id` = ? OR `tl_isotope_stock_booking`.`product_id` IS NULL 
       GROUP BY `tl_isotope_stock_booking_line`.`account`
     ";
@@ -144,6 +146,7 @@ class ProductHelper {
       $accounts[$productInfoQueryResult->account]['debit'] = $productInfoQueryResult->debit;
       $accounts[$productInfoQueryResult->account]['credit'] = $productInfoQueryResult->credit;
       $accounts[$productInfoQueryResult->account]['balance'] = $productInfoQueryResult->balance;
+      $accounts[$productInfoQueryResult->account]['type'] = $productInfoQueryResult->type;
       if (isset($accountTypeBalance[$accounts[$productInfoQueryResult->account]['type']])) {
         $accountTypeBalance[$accounts[$productInfoQueryResult->account]['type']]['balance'] += $productInfoQueryResult->balance;
       }
