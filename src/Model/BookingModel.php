@@ -23,6 +23,7 @@ use Contao\System;
 use Isotope\Model\ProductCollection\Order;
 use Isotope\Model\ProductCollectionItem;
 use Krabo\IsotopeStockBundle\Event\BookingEvent;
+use Krabo\IsotopeStockBundle\Event\ClearBookingEvent;
 use Krabo\IsotopeStockBundle\Event\Events;
 use Krabo\IsotopeStockBundle\Helper\BookingHelper;
 
@@ -62,6 +63,11 @@ class BookingModel extends Model {
     while($bookings->next()) {
       $bookings->delete();
     }
+
+    $event = new ClearBookingEvent(null, $bookingType, $objOrder->id);
+    System::getContainer()
+      ->get('event_dispatcher')
+      ->dispatch($event, Events::CLEAR_BOOKING_EVENT);
   }
 
   /**

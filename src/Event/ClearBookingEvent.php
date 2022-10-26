@@ -18,12 +18,27 @@
 
 namespace Krabo\IsotopeStockBundle\Event;
 
-class Events {
+use Krabo\IsotopeStockBundle\Model\BookingModel;
 
-  const MANUAL_BOOKING_EVENT = 'krabo.isotope_stock.manual_booking';
+class ClearBookingEvent {
 
-  const BOOKING_EVENT = 'krabo.isotope_stock.booking';
+  /** @var int */
+  public $productId;
 
-  const CLEAR_BOOKING_EVENT = 'krabo.isotope_stock.clear_booking';
+  /** @var int */
+  public $type;
+
+  /** @var int */
+  public $orderId;
+
+  /** @var array  */
+  public $extraData = [];
+
+  public function __construct(int $productId=null, int $type=null, int $orderId=null, array $extraData=[]) {
+    $this->productId = $productId;
+    $this->type = $type;
+    $this->orderId = $orderId;
+    $this->extraData = $extraData;
+  }
 
 }
