@@ -190,7 +190,7 @@ class BookingController extends AbstractController
           $booking = new BookingModel();
           $booking->description = $data['description'];
           $booking->date = $data['date']->getTimestamp();
-          $booking->period = $data['period_id']->id;
+          $booking->period_id = $data['period_id']->id;
           $booking->product_id = $product->id;
           $booking->type = $data['type'];
           $booking->save();
