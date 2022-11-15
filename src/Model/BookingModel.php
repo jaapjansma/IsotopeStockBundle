@@ -50,6 +50,19 @@ class BookingModel extends Model {
   }
 
   /**
+   * Modify the current row before it is stored in the database
+   *
+   * @param array $arrSet The data array
+   *
+   * @return array The modified data array
+   */
+  protected function preSave(array $arrSet)
+  {
+    $arrSet['tstamp'] = time();
+    return $arrSet;
+  }
+
+  /**
    * @param \Isotope\Model\ProductCollection\Order $objOrder
    * @param int $type
    *
