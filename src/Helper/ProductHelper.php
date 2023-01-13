@@ -44,7 +44,7 @@ class ProductHelper {
    * @return array
    */
   public static function getProductStockPerAccount(int $product_id) {
-    self::loadStockInfoForProduct($product_id);
+    self::loadStockInfoForProducts([$product_id]);
     return self::$productAccounts[$product_id];
   }
 
@@ -57,7 +57,7 @@ class ProductHelper {
    * @return int
    */
   public static function getProductCountPerAccount(int $product_id, int $account_id): int {
-    self::loadStockInfoForProduct($product_id);
+    self::loadStockInfoForProducts([$product_id]);
     if (isset(self::$productAccounts[$product_id][$account_id])) {
       return self::$productAccounts[$product_id][$account_id]['balance'];
     }
@@ -93,67 +93,89 @@ class ProductHelper {
    * @return array
    */
   public static function getProductStockPerAccountType(int $product_id) {
-    self::loadStockInfoForProduct($product_id);
+    self::loadStockInfoForProducts([$product_id]);
     return self::$productAccountTypes[$product_id];
   }
 
   /**
    * Load information about the stock for a certain product.
    *
-   * @param int $product_id
+   * @param array $product_ids
    * @return void
    */
-  private static function loadStockInfoForProduct(int $product_id) {
-    if (isset(self::$productAccounts[$product_id])) {
-      return;
-    }
-    \Contao\System::loadLanguageFile('tl_isotope_stock_account');
-    $db = \Database::getInstance();
-    $accountQueryResult = $db->prepare("SELECT * FROM `tl_isotope_stock_account` ORDER BY `type`, `title`")->execute();
-    $accounts = [];
-    $accountTypeBalance = [];
-    while($accountQueryResult->next()) {
-      $account_id = $accountQueryResult->id;
-      $accounts[$account_id] = $accountQueryResult->row();
-      $accounts[$account_id]['title'] = html_entity_decode($accounts[$account_id]['title']);
-      $accounts[$account_id]['type_label'] = $GLOBALS['TL_LANG']['tl_isotope_stock_account']['type_options'][$accountQueryResult->type];
-      $accounts[$account_id]['debit'] = 0;
-      $accounts[$account_id]['credit'] = 0;
-      $accounts[$account_id]['balance'] = 0;
-      if ($accountQueryResult->type && !isset($accountTypeBalance[$accountQueryResult->type])) {
-        $accountTypeBalance[$accountQueryResult->type]['balance'] = 0;
-        $accountTypeBalance[$accountQueryResult->type]['label'] = $GLOBALS['TL_LANG']['tl_isotope_stock_account']['type_options'][$accountQueryResult->type];
+  public static function loadStockInfoForProducts(array $product_ids) {
+    $pids = [];
+    foreach($product_ids as $product_id) {
+      if (isset(self::$productAccounts[$product_id])) {
+        continue;
       }
+      $pids[] = $product_id;
     }
 
-    $productInfoQuery = "
+    if (count($pids)) {
+      \Contao\System::loadLanguageFile('tl_isotope_stock_account');
+      $db = \Database::getInstance();
+      $accountQueryResult = $db->prepare("SELECT * FROM `tl_isotope_stock_account` ORDER BY `type`, `title`")->execute();
+      $accounts = [];
+      $accountTypeBalance = [];
+      while($accountQueryResult->next()) {
+        $account_id = $accountQueryResult->id;
+        $accounts[$account_id] = $accountQueryResult->row();
+        $accounts[$account_id]['title'] = html_entity_decode($accounts[$account_id]['title']);
+        $accounts[$account_id]['type_label'] = $GLOBALS['TL_LANG']['tl_isotope_stock_account']['type_options'][$accountQueryResult->type];
+        $accounts[$account_id]['debit'] = 0;
+        $accounts[$account_id]['credit'] = 0;
+        $accounts[$account_id]['balance'] = 0;
+        if ($accountQueryResult->type && !isset($accountTypeBalance[$accountQueryResult->type])) {
+          $accountTypeBalance[$accountQueryResult->type]['balance'] = 0;
+          $accountTypeBalance[$accountQueryResult->type]['label'] = $GLOBALS['TL_LANG']['tl_isotope_stock_account']['type_options'][$accountQueryResult->type];
+        }
+      }
+
+      $productInfoQuery = "
       SELECT
         SUM(`tl_isotope_stock_booking_line`.`debit`) AS `debit`,
         SUM(`tl_isotope_stock_booking_line`.`credit`) AS `credit`,
         (SUM(`tl_isotope_stock_booking_line`.`debit`) - SUM(`tl_isotope_stock_booking_line`.`credit`)) AS `balance`,
          `tl_isotope_stock_booking_line`.`account`,
-         `tl_isotope_stock_account`.`type`
+         `tl_isotope_stock_account`.`type`,
+        `tl_isotope_stock_booking`.`product_id`
       FROM `tl_isotope_stock_booking_line`
       LEFT JOIN `tl_isotope_stock_booking` ON `tl_isotope_stock_booking`.`id` = `tl_isotope_stock_booking_line`.`pid`
       LEFT JOIN `tl_isotope_stock_period` ON `tl_isotope_stock_period`.`id` = `tl_isotope_stock_booking`.`period_id` AND `tl_isotope_stock_period`.`active` = '1'
       LEFT JOIN `tl_isotope_stock_account` ON `tl_isotope_stock_account`.`id` = `tl_isotope_stock_booking_line`.`account`
-      WHERE `tl_isotope_stock_booking`.`product_id` = ? OR `tl_isotope_stock_booking`.`product_id` IS NULL 
-      GROUP BY `tl_isotope_stock_booking_line`.`account`
+      WHERE `tl_isotope_stock_booking`.`product_id` IN(".implode(",", $pids).") OR `tl_isotope_stock_booking`.`product_id` IS NULL 
+      GROUP BY `tl_isotope_stock_booking_line`.`account`, `tl_isotope_stock_booking`.`product_id`
+      ORDER BY `tl_isotope_stock_booking`.`product_id`
     ";
-    $productInfoQueryResult = $db->prepare($productInfoQuery)->execute($product_id);
+      $productInfoQueryResult = $db->prepare($productInfoQuery)->execute();
 
-    while($productInfoQueryResult->next()) {
-      $accounts[$productInfoQueryResult->account]['debit'] = $productInfoQueryResult->debit;
-      $accounts[$productInfoQueryResult->account]['credit'] = $productInfoQueryResult->credit;
-      $accounts[$productInfoQueryResult->account]['balance'] = $productInfoQueryResult->balance;
-      $accounts[$productInfoQueryResult->account]['type'] = $productInfoQueryResult->type;
-      if (isset($accountTypeBalance[$accounts[$productInfoQueryResult->account]['type']])) {
-        $accountTypeBalance[$accounts[$productInfoQueryResult->account]['type']]['balance'] += $productInfoQueryResult->balance;
+      $productAccounts = [];
+      $productAccountTypeBalance = [];
+      while ($productInfoQueryResult->next()) {
+        if (!isset($productAccounts[$productInfoQueryResult->product_id])) {
+          $productAccounts[$productInfoQueryResult->product_id] = $accounts[$productInfoQueryResult->account];
+        }
+        $productAccounts[$productInfoQueryResult->product_id][$productInfoQueryResult->account]['debit'] = $productInfoQueryResult->debit;
+        $productAccounts[$productInfoQueryResult->product_id][$productInfoQueryResult->account]['credit'] = $productInfoQueryResult->credit;
+        $productAccounts[$productInfoQueryResult->product_id][$productInfoQueryResult->account]['balance'] = $productInfoQueryResult->balance;
+        $productAccounts[$productInfoQueryResult->product_id][$productInfoQueryResult->account]['type'] = $productInfoQueryResult->type;
+        $accountType = $accounts[$productInfoQueryResult->account]['type'];
+        if (!isset($productAccountTypeBalance[$productInfoQueryResult->product_id])) {
+          $productAccountTypeBalance[$productInfoQueryResult->product_id] = [];
+          if (isset($accountTypeBalance[$accountType])) {
+            $productAccountTypeBalance[$productInfoQueryResult->product_id][$accountType] = $accountTypeBalance[$accountType];
+          }
+        }
+        if (isset($productAccountTypeBalance[$productInfoQueryResult->product_id][$accountType])) {
+          $productAccountTypeBalance[$productInfoQueryResult->product_id][$accountType]['balance'] += $productInfoQueryResult->balance;
+        }
+      }
+      foreach($pids as $pid) {
+        self::$productAccounts[$pid] = $productAccounts[$pid];
+        self::$productAccountTypes[$pid] = $productAccountTypeBalance[$pid];
       }
     }
-
-    self::$productAccounts[$product_id] = $accounts;
-    self::$productAccountTypes[$product_id] = $accountTypeBalance;
   }
 
   /**

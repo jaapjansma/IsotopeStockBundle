@@ -20,6 +20,8 @@ namespace Krabo\IsotopeStockBundle\Helper;
 
 class BookingHelper {
 
+  protected static $modifiedBookingIds = [];
+
   /**
    * Returns whether a booking is balance or not.
    *
@@ -78,27 +80,34 @@ class BookingHelper {
    * @return void
    */
   public static function updateBalanceStatusForBooking(int $booking_id) {
-    $db = \Database::getInstance();
+    self::$modifiedBookingIds[] = $booking_id;
+  }
 
-    $queryOutBalance = "
-      UPDATE `tl_isotope_stock_booking`
-      SET `is_in_balance` = '0' 
-      WHERE `id` = ?  
-    ";
-    $db->prepare($queryOutBalance)->execute($booking_id);
+  public static function updateBalanceStatusForModifiedBookings() {
+    if (count(self::$modifiedBookingIds)) {
+      $db = \Contao\Database::getInstance();
+      $queryOutBalance = "UPDATE `tl_isotope_stock_booking` SET `is_in_balance` = '0' WHERE `id` IN (".implode(",", self::$modifiedBookingIds).")";
+      $db->prepare($queryOutBalance)->execute();
 
-    $queryInBalance = "
-      UPDATE `tl_isotope_stock_booking`
-      SET `is_in_balance` = '1' 
-      WHERE `tl_isotope_stock_booking`.`id` IN ( 
-        SELECT     
-        `tl_isotope_stock_booking_line`.`pid` 
-        FROM `tl_isotope_stock_booking_line`
-        WHERE `pid` = ?
-        GROUP BY `pid`
-        HAVING (SUM(`debit`) - SUM(`credit`)) = 0
-    )";
-    $db->prepare($queryInBalance)->execute($booking_id);
+      $inBalanceResult = $db->prepare("
+      SELECT 
+          `tl_isotope_stock_booking`.`id` as `id`,
+          (SUM(`debit`) - SUM(`credit`)) as balance
+      FROM `tl_isotope_stock_booking`
+      INNER JOIN `tl_isotope_stock_booking_line` ON `tl_isotope_stock_booking_line`.`pid` = `tl_isotope_stock_booking`.`id`
+      WHERE `tl_isotope_stock_booking`.`id` IN (".implode(",", self::$modifiedBookingIds).")
+      GROUP BY `tl_isotope_stock_booking`.`id`
+      HAVING (SUM(`debit`) - SUM(`credit`)) = 0;
+      ")->execute();
+
+      $inBalanceBookingIds = [];
+      while($inBalanceResult->next()) {
+        $inBalanceBookingIds[] = $inBalanceResult->id;
+      }
+
+      $db->prepare("UPDATE `tl_isotope_stock_booking` SET `is_in_balance` = '1' WHERE `id` IN (".implode(",", $inBalanceBookingIds).") ")->execute();
+    }
+    self::$modifiedBookingIds = [];
   }
 
 }
