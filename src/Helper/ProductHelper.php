@@ -154,7 +154,10 @@ class ProductHelper {
       $productAccountTypeBalance = [];
       while ($productInfoQueryResult->next()) {
         if (!isset($productAccounts[$productInfoQueryResult->product_id])) {
-          $productAccounts[$productInfoQueryResult->product_id] = $accounts[$productInfoQueryResult->account];
+          $productAccounts[$productInfoQueryResult->product_id] = $accounts;
+        }
+        if (!isset($productAccountTypeBalance[$productInfoQueryResult->product_id])) {
+          $productAccountTypeBalance[$productInfoQueryResult->product_id] = $accountTypeBalance;
         }
         $productAccounts[$productInfoQueryResult->product_id][$productInfoQueryResult->account]['debit'] = $productInfoQueryResult->debit;
         $productAccounts[$productInfoQueryResult->product_id][$productInfoQueryResult->account]['credit'] = $productInfoQueryResult->credit;
