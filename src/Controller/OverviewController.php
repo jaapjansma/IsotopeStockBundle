@@ -25,6 +25,7 @@ use Krabo\IsotopeStockBundle\Helper\ProductHelper;
 use Krabo\IsotopeStockBundle\Model\AccountModel;
 use PhpOffice\PhpSpreadsheet\RichText\RichText;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Color;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -72,6 +73,7 @@ class OverviewController extends AbstractController
   public function overview(Request $request, bool $onlyActive=true): Response
   {
     \Contao\System::loadLanguageFile('default');
+    \Contao\System::loadLanguageFile('tl_iso_product');
     $spreadsheet = new Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
     $sheet->setCellValue('A1', $GLOBALS['TL_LANG']['IstotopeStockProductInfo']['Product']);
@@ -90,9 +92,13 @@ class OverviewController extends AbstractController
     $sheet->getColumnDimension('D')->setAutoSize(TRUE);
     $sheet->getStyle('D1')->getFont()->setBold(TRUE);
     $sheet->getStyle('D1')->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_TEXT);
+    $sheet->setCellValue('E1', $GLOBALS['TL_LANG']['tl_iso_product']['isostock_minimun_stock'][0]);
+    $sheet->getColumnDimension('E')->setAutoSize(TRUE);
+    $sheet->getStyle('E1')->getFont()->setBold(TRUE);
+    $sheet->getStyle('E1')->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_TEXT);
 
     $accounts = AccountModel::findAll(['order' => 'title ASC']);
-    $column = 'E';
+    $column = 'F';
     foreach($accounts as $account) {
       $sheet->setCellValue($column.'1', html_entity_decode($account->title));
       $sheet->getColumnDimension($column)->setAutoSize(TRUE);
@@ -102,7 +108,7 @@ class OverviewController extends AbstractController
     }
     $sheet->freezePane('A2');
 
-    $sql = "SELECT id, name, sku FROM tl_iso_product WHERE `pid` = '0'";
+    $sql = "SELECT id, name, sku, isostock_minimun_stock FROM tl_iso_product WHERE `pid` = '0'";
     if ($onlyActive) {
       $sql .= " AND `published` = '1'";
     }
@@ -115,7 +121,7 @@ class OverviewController extends AbstractController
         continue;
       }
 
-      $sheet->setCellValue('A'.$i, html_entity_decode($product['name']));
+      $sheet->setCellValue('A'.$i, html_entity_decode($product['name'], ENT_QUOTES));
       $sheet->getStyle('A'.$i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_TEXT);
       $sheet->setCellValue('B'.$i, $product['sku']);
       $sheet->getStyle('B'.$i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_TEXT);
@@ -124,8 +130,17 @@ class OverviewController extends AbstractController
       $sheet->getStyle('C'.$i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER);
       $sheet->setCellValue('D'.$i, $stock[AccountModel::PRE_ORDER_TYPE]['balance']);
       $sheet->getStyle('D'.$i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER);
+      $sheet->setCellValue('E'.$i, $product['isostock_minimun_stock']);
+      $sheet->getStyle('E'.$i)->getNumberFormat()->setFormatCode(NumberFormat::FORMAT_NUMBER);
+      if ($stock[AccountModel::STOCK_TYPE]['balance'] < $product['isostock_minimun_stock'] && $product['isostock_minimun_stock'] > 0) {
+        $sheet->getStyle('A'.$i)->getFont()->setColor(new Color(Color::COLOR_RED));
+        $sheet->getStyle('B'.$i)->getFont()->setColor(new Color(Color::COLOR_RED));
+        $sheet->getStyle('C'.$i)->getFont()->setColor(new Color(Color::COLOR_RED));
+        $sheet->getStyle('D'.$i)->getFont()->setColor(new Color(Color::COLOR_RED));
+        $sheet->getStyle('E'.$i)->getFont()->setColor(new Color(Color::COLOR_RED));
+      }
 
-      $column = 'E';
+      $column = 'F';
       $stockPerAccount = ProductHelper::getProductStockPerAccount($product['id']);
       foreach($accounts as $account) {
         if (isset($stockPerAccount[$account->id]) && isset ($stockPerAccount[$account->id]['balance'])) {

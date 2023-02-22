@@ -54,3 +54,13 @@ $GLOBALS['TL_DCA']['tl_iso_product']['fields']['isostock_preorder'] = [
   'attributes'            => array( 'legend'=>'isostock_legend' ),
   'sql'                   => "char(1) NOT NULL default ''"
 ];
+
+$GLOBALS['TL_DCA']['tl_iso_product']['fields']['isostock_minimun_stock'] = [
+  'inputType'               => 'text',
+  'eval'                    => array('doNotCopy'=>true, 'rgxp' => 'natural', 'tl_class' => 'w50' ),
+  'attributes'            => array( 'legend'=>'isostock_legend' ),
+  'sql'                     => "int(10) unsigned NOT NULL default 0",
+  'flag'                    => 11,
+  'default'                 => '0',
+  'filter'                => true,
+];
