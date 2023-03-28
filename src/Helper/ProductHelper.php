@@ -175,6 +175,12 @@ class ProductHelper {
         }
       }
       foreach($pids as $pid) {
+        if (!isset($productAccounts[$pid])) {
+          $productAccounts[$pid] = $accounts;
+        }
+        if (!isset($productAccountTypeBalance[$pid])) {
+          $productAccountTypeBalance[$pid] = $accountTypeBalance;
+        }
         self::$productAccounts[$pid] = $productAccounts[$pid];
         self::$productAccountTypes[$pid] = $productAccountTypeBalance[$pid];
       }
