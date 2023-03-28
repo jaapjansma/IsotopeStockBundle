@@ -141,9 +141,9 @@ class ProductHelper {
          `tl_isotope_stock_account`.`type`,
         `tl_isotope_stock_booking`.`product_id`
       FROM `tl_isotope_stock_booking_line`
-      LEFT JOIN `tl_isotope_stock_booking` ON `tl_isotope_stock_booking`.`id` = `tl_isotope_stock_booking_line`.`pid`
-      LEFT JOIN `tl_isotope_stock_period` ON `tl_isotope_stock_period`.`id` = `tl_isotope_stock_booking`.`period_id` AND `tl_isotope_stock_period`.`active` = '1'
-      LEFT JOIN `tl_isotope_stock_account` ON `tl_isotope_stock_account`.`id` = `tl_isotope_stock_booking_line`.`account`
+      INNER JOIN `tl_isotope_stock_booking` ON `tl_isotope_stock_booking`.`id` = `tl_isotope_stock_booking_line`.`pid`
+      INNER JOIN `tl_isotope_stock_period` ON `tl_isotope_stock_period`.`id` = `tl_isotope_stock_booking`.`period_id` AND `tl_isotope_stock_period`.`active` = '1'
+      INNER JOIN `tl_isotope_stock_account` ON `tl_isotope_stock_account`.`id` = `tl_isotope_stock_booking_line`.`account`
       WHERE `tl_isotope_stock_booking`.`product_id` IN(".implode(",", $pids).") OR `tl_isotope_stock_booking`.`product_id` IS NULL 
       GROUP BY `tl_isotope_stock_booking_line`.`account`, `tl_isotope_stock_booking`.`product_id`
       ORDER BY `tl_isotope_stock_booking`.`product_id`
