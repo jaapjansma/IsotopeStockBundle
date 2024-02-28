@@ -20,5 +20,5 @@ $GLOBALS['TL_LANG']['tl_iso_product']['stock'] = 'View Stock';
 $GLOBALS['TL_LANG']['tl_iso_product']['isostock_legend'] = 'Isotope Stock';
 $GLOBALS['TL_LANG']['tl_iso_product']['isostock_preorder'] = ['Product Pre-Order', 'The Product is available for pre-order.'];
 $GLOBALS['TL_LANG']['tl_iso_product']['isostock_minimun_stock'] = ['Minimum Stock', ''];
-$GLOBALS['TL_LANG']['tl_isotope_prodocut']['stock_report'] ='Stock Report';
-$GLOBALS['TL_LANG']['tl_isotope_prodocut']['stock_report_all'] ='Stock Report (include inactive)';
+$GLOBALS['TL_LANG']['tl_iso_product']['stock_report'] ='Stock Report';
+$GLOBALS['TL_LANG']['tl_iso_product']['stock_report_all'] ='Stock Report (include inactive)';
