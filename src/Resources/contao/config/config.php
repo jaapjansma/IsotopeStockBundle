@@ -18,7 +18,7 @@
 
 use \Krabo\IsotopeStockBundle\EventListener\ProductCollectionListener;
 
-if (!\is_array($GLOBALS['BE_MOD']['isotope_stock']))
+if (!isset($GLOBALS['BE_MOD']['isotope_stock']) || !\is_array($GLOBALS['BE_MOD']['isotope_stock']))
 {
   array_insert($GLOBALS['BE_MOD'], 2, array('isotope_stock' => array()));
 }
