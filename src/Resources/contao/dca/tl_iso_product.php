@@ -23,7 +23,7 @@ $GLOBALS['TL_DCA']['tl_iso_product']['edit']['buttons_callback'][] = [ProductLis
 
 $GLOBALS['TL_DCA']['tl_iso_product']['list']['global_operations']['stock_report'] = array
 (
-  'label'               =>  $GLOBALS['TL_LANG']['tl_isotope_prodocut']['stock_report'],
+  'label'               =>  &$GLOBALS['TL_LANG']['tl_iso_product']['stock_report'],
   'route'               => 'tl_isotope_stock_booking_overview',
   'class'               => 'stock_report',
   'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="c"',
@@ -32,7 +32,7 @@ $GLOBALS['TL_DCA']['tl_iso_product']['list']['global_operations']['stock_report'
 
 $GLOBALS['TL_DCA']['tl_iso_product']['list']['global_operations']['stock_report_all'] = array
 (
-  'label'               =>  $GLOBALS['TL_LANG']['tl_isotope_prodocut']['stock_report_all'],
+  'label'               =>  &$GLOBALS['TL_LANG']['tl_iso_product']['stock_report_all'],
   'route'               => 'tl_isotope_stock_booking_overview_all',
   'class'               => 'stock_report',
   'attributes'          => 'onclick="Backend.getScrollOffset()" accesskey="c"',
