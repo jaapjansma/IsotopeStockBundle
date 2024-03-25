@@ -3,11 +3,11 @@
   "description":"Isotope Stock.",
   "type": "contao-bundle",
   "license":"AGPL-3.0-or-later",
-  "version": "1.0.20",
+  "version": "1.0.21",
   "require": {
     "contao/core-bundle": "^4.9",
     "isotope/isotope-core": "^2.6",
-    "terminal42/contao-tablelookupwizard": "~3.2",
+    "terminal42/contao-tablelookupwizard": "^3.2",
     "symfony/form": "^5.4",
     "symfony/validator": "^5.4",
     "phpoffice/phpspreadsheet": "^1.23"
