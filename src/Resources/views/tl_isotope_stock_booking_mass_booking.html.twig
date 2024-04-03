@@ -62,6 +62,7 @@
                     <thead>
                     <tr>
                         <th class="tl_folder_tlist row row_0 row_even row_first">{{ 'tl_isotope_stock_booking.sku'|trans({}, 'contao_tl_isotope_stock_booking') }}</th>
+                        <th class="tl_folder_tlist row row_0 row_even row_first">{{ 'tl_isotope_stock_booking.product_description'|trans({}, 'contao_tl_isotope_stock_booking') }}</th>
                         <th class="tl_folder_tlist row row_0 row_even row_first">{{ 'tl_isotope_stock_booking.quantity'|trans({}, 'contao_tl_isotope_stock_booking') }}</th>
                         <th class="tl_folder_tlist row row_0 row_even row_first">&nbsp;</th>
                     </tr>
@@ -96,6 +97,19 @@
     <script src="{{ asset('jquery/js/jquery.min.js') }}"></script>
     <script type="text/javascript">
       jQuery(document).ready(function () {
+        var product_sku_url = '{{ product_sku_url|raw }}';
+        function lookupSku(element) {
+            var sku = jQuery(element).val();
+            var parent = jQuery(element).parent().parent();
+            var descciption = parent.find('td.product_description')[0];
+            descciption.innerHTML = '<span style="color:red;">{{ 'tl_isotope_stock_booking.product_description_not_found'|trans({}, 'contao_tl_isotope_stock_booking') }}</span>';
+            jQuery.get(product_sku_url + "/" + sku, function(data, textStatus, xhr){
+                if (data.name.length > 0) {
+                    descciption.innerHTML = data.name;
+                }
+            });
+        }
+
         jQuery('.add-another-collection-widget').click(function (e) {
           var selector = jQuery(jQuery(this).attr('data-selector'));
           // Try to find the counter of the list or use the length of the list
@@ -116,6 +130,9 @@
           // create a new list element and add it to the list
           var newElem = jQuery(newWidget);
           newElem.appendTo(selector);
+            jQuery('#form_product_ids_' + currentCounter + '_sku').change(function (e) {
+                lookupSku(this);
+            });
           jQuery('#form_product_ids_' + currentCounter + '_sku').focus();
         });
       });
@@ -165,10 +182,11 @@
 
 {% macro product_id_prototype(childForm) %}
     <tr>
-        <td>
+        <td class="sku">
             {{ form_errors(childForm.sku) }}
             {{ form_widget(childForm.sku) }}
         </td>
+        <td class="product_description"></td>
         <td>
             {{ form_errors(childForm.quantity) }}
             {{ form_widget(childForm.quantity) }}

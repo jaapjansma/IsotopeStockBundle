@@ -45,5 +45,7 @@ $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['product_ids'] = 'Producten';
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['addProduct'] = 'Voeg product toe';
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['saveMassBooking'] = 'Opslaan';
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['sku'] = 'Productnummer';
+$GLOBALS['TL_LANG']['tl_isotope_stock_booking']['product_description'] = 'Product';
+$GLOBALS['TL_LANG']['tl_isotope_stock_booking']['product_description_not_found'] = 'Niet gevonden';
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['quantity'] = 'Aantal';
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['delete_product_id'] = 'Verwijder product';

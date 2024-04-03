@@ -3,7 +3,7 @@
   "description":"Isotope Stock.",
   "type": "contao-bundle",
   "license":"AGPL-3.0-or-later",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "require": {
     "contao/core-bundle": "^4.9",
     "isotope/isotope-core": "^2.6",

@@ -45,5 +45,7 @@ $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['product_ids'] = 'Products';
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['addProduct'] = 'Add product';
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['saveMassBooking'] = 'Save';
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['sku'] = 'Product Number';
+$GLOBALS['TL_LANG']['tl_isotope_stock_booking']['product_description'] = 'Product';
+$GLOBALS['TL_LANG']['tl_isotope_stock_booking']['product_description_not_found'] = 'Not found';
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['quantity'] = 'Quantity';
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['delete_product_id'] = 'Remove product';

@@ -37,6 +37,7 @@ use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormError;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -230,9 +231,27 @@ class BookingController extends AbstractController
     $templateData = [
       'title' => $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['new_mass_booking'],
       'form' => $form->createView(),
+      'product_sku_url' => $this->generateUrl('tl_isotope_stock_booking_product_sku'),
     ];
     $content = $this->twig->render('@IsotopeStock/tl_isotope_stock_booking_mass_booking.html.twig', $templateData);
     $response->setContent($content);
     return $response;
+  }
+
+    /**
+     * @Route("/contao/tl_isotope_stock_booking/product_sku/{sku}",
+     *     name="tl_isotope_stock_booking_product_sku",
+     *     defaults={"_scope": "backend"}
+     * )
+     */
+  public function findProduct(string $sku= ''): Response {
+      $data['name'] = '';
+      if (!empty($sku)) {
+          $objProduct = Product::findOneBy('sku', $sku);
+          if ($objProduct) {
+              $data['name'] = $objProduct->name;
+          }
+      }
+      return new JsonResponse($data);
   }
 }
