@@ -25,6 +25,7 @@ use Krabo\IsotopeStockBundle\Model\BookingModel;
 \Contao\Controller::loadDataContainer(\Isotope\Model\Product::getTable());
 \Contao\System::loadLanguageFile(\Isotope\Model\ProductCollection::getTable());
 \Contao\Controller::loadDataContainer(\Isotope\Model\ProductCollection::getTable());
+\Contao\System::loadLanguageFile('tl_isotope_stock_booking');
 
 $GLOBALS['TL_DCA']['tl_isotope_stock_booking'] = array
 (

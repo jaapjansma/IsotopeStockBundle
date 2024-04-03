@@ -26,6 +26,8 @@ use Krabo\IsotopeStockBundle\Helper\ProductHelper;
 use Krabo\IsotopeStockBundle\Model\AccountModel;
 use Krabo\IsotopeStockBundle\Model\BookingModel;
 
+\Contao\System::loadLanguageFile('tl_isotope_stock_booking_line');
+
 $GLOBALS['TL_DCA']['tl_isotope_stock_booking_line'] = array
 (
   // Config

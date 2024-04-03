@@ -16,6 +16,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+\Contao\System::loadLanguageFile('tl_isotope_stock_account');
 
 $GLOBALS['TL_DCA']['tl_isotope_stock_account'] = array
 (

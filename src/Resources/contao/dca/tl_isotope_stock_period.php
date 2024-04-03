@@ -17,6 +17,8 @@
  */
 
 
+\Contao\System::loadLanguageFile('tl_isotope_stock_period');
+
 $GLOBALS['TL_DCA']['tl_isotope_stock_period'] = array
 (
   // Config
