@@ -7,6 +7,7 @@ services:
   Krabo\IsotopeStockBundle\Controller\BookingController: ~
   Krabo\IsotopeStockBundle\Controller\OverviewController: ~
   Krabo\IsotopeStockBundle\Cron\UpdateTstamp: ~
+  Krabo\IsotopeStockBundle\Cron\CheckBookingEvents: ~
   Krabo\IsotopeStockBundle\EventListener\KernelListener:
     public: true
   Krabo\IsotopeStockBundle\EventListener\ProductListener:

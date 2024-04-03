@@ -185,6 +185,7 @@ class BookingController extends AbstractController
     $form->handleRequest($request);
     if ($form->isSubmitted() && $form->isValid()) {
       $data = $form->getData();
+      $insertIds = [];
       foreach($data['product_ids'] as $product_id) {
         $product = Product::findOneBy('sku', $product_id['sku']);
         if ($product) {
@@ -213,13 +214,11 @@ class BookingController extends AbstractController
           }
           $creditBookingLine->pid = $booking->id;
           $creditBookingLine->save();
-          BookingHelper::updateBalanceStatusForBooking($booking->id);
-
-          $event = new ManualBookingEvent($booking);
-          System::getContainer()
-            ->get('event_dispatcher')
-            ->dispatch($event, Events::MANUAL_BOOKING_EVENT);
+          $insertIds[] = "(" . $booking->id . ")";
         }
+      }
+      if (count($insertIds)) {
+        \Database::getInstance()->execute("INSERT INTO `tl_isotope_stock_booking_event` (`booking_id`) VALUES " . implode(", ", $insertIds));
       }
       $url = $this->generateUrl('contao_backend', ['do' => 'tl_isotope_stock_booking']);
       return new RedirectResponse($url);
