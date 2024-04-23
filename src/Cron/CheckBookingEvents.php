@@ -61,6 +61,7 @@ class CheckBookingEvents
         if (count($ids)) {
             $sql = "DELETE FROM `tl_isotope_stock_booking_event` WHERE `id` IN (" . implode(", ", $ids) . ")";
             $db->execute($sql);
+            BookingHelper::updateBalanceStatusForModifiedBookings();
         }
     }
 }
