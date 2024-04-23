@@ -289,7 +289,9 @@ class tl_isotope_stock_booking {
     $labels[$product_count_key] = $debit;
     if ($labels[$product_id_key]) {
       $objProduct = \Isotope\Model\Product::findByPk($labels[$product_id_key]);
-      $labels[$product_id_key] = $objProduct->name;
+      if ($objProduct) {
+        $labels[$product_id_key] = $objProduct->name;
+      }
     }
     if (!empty($labels[$order_id_key])) {
       $objOrder = \Isotope\Model\ProductCollection\Order::findByPk($labels[$order_id_key]);
