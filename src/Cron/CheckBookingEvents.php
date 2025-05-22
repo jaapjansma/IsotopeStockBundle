@@ -52,11 +52,13 @@ class CheckBookingEvents
         while($objResult->next()) {
             $ids[] = $objResult->id;
             $booking = BookingModel::findByPk($objResult->booking_id);
-            BookingHelper::updateBalanceStatusForBooking($booking->id);
-            $event = new ManualBookingEvent($booking);
-            System::getContainer()
+            if ($booking) {
+              BookingHelper::updateBalanceStatusForBooking($booking->id);
+              $event = new ManualBookingEvent($booking);
+              System::getContainer()
                 ->get('event_dispatcher')
                 ->dispatch($event, Events::MANUAL_BOOKING_EVENT);
+            }
         }
         if (count($ids)) {
             $sql = "DELETE FROM `tl_isotope_stock_booking_event` WHERE `id` IN (" . implode(", ", $ids) . ")";
