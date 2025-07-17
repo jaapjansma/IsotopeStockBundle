@@ -66,6 +66,9 @@ class ProductCollectionListener {
    * @return mixed
    */
   public function updateItemInCollection(ProductCollectionItem $item, $arrSet, ProductCollection $collection) {
+    if (empty($arrSet['quantity'])) {
+      return $arrSet;
+    }
     $intQuantity = $arrSet['quantity'];
     $objProduct = $item->getProduct();
     if (!$objProduct) {
