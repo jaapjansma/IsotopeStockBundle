@@ -32,6 +32,7 @@ $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['type_options']['1'] = 'Sales';
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['type_options']['2'] = 'Sales - Delivery';
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['type_options']['3'] = 'Purchase';
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['type_options']['4'] = 'Purchase - Delivery';
+$GLOBALS['TL_LANG']['tl_isotope_stock_booking']['type_options']['5'] = 'Archive';
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['is_in_balance'] = ['Is in balance', ''];
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['in_balance'] = 'Booking is in balance';
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['not_in_balance'] = 'Booking is not in balance';

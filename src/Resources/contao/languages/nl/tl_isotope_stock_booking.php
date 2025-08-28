@@ -32,6 +32,7 @@ $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['type_options']['1'] = 'Verkopen
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['type_options']['2'] = 'verkopen - Levering';
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['type_options']['3'] = 'Inkopen';
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['type_options']['4'] = 'Inkopen - Levering';
+$GLOBALS['TL_LANG']['tl_isotope_stock_booking']['type_options']['5'] = 'Gearchiveerd';
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['is_in_balance'] = ['Is in balans', ''];
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['in_balance'] = 'Boeking is in balans';
 $GLOBALS['TL_LANG']['tl_isotope_stock_booking']['not_in_balance'] = 'Boeking is niet in balans';

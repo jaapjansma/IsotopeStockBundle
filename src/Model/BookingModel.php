@@ -35,6 +35,8 @@ class BookingModel extends Model {
   const SALES_TYPE = 1;
   const DELIVERY_TYPE = 2;
 
+  const ARCHIVE_TYPE = 5;
+
   /**
    * @param \Isotope\Model\ProductCollection\Order $objOrder
    * @param $product_id
