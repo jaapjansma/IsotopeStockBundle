@@ -105,7 +105,9 @@ class BookingHelper {
         $inBalanceBookingIds[] = $inBalanceResult->id;
       }
 
-      $db->prepare("UPDATE `tl_isotope_stock_booking` SET `is_in_balance` = '1' WHERE `id` IN (".implode(",", $inBalanceBookingIds).") ")->execute();
+      if (count($inBalanceBookingIds)) {
+        $db->prepare("UPDATE `tl_isotope_stock_booking` SET `is_in_balance` = '1' WHERE `id` IN (" . implode(",", $inBalanceBookingIds) . ") ")->execute();
+      }
     }
     self::$modifiedBookingIds = [];
   }
