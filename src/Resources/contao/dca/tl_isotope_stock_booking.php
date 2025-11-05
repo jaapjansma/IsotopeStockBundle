@@ -39,7 +39,9 @@ $GLOBALS['TL_DCA']['tl_isotope_stock_booking'] = array
     (
       'keys' => array
       (
-        'id' => 'primary'
+        'id' => 'primary',
+        'period_id,product_id' => 'index',
+        'id,period_id,product_id' => 'index',
       )
     ),
     'onsubmit_callback' => array(

@@ -29,7 +29,8 @@ $GLOBALS['TL_DCA']['tl_isotope_stock_period'] = array
     (
       'keys' => array
       (
-        'id' => 'primary'
+        'id' => 'primary',
+        'active' => 'index'
       )
     )
   ),

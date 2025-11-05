@@ -18,6 +18,7 @@
 
 namespace Krabo\IsotopeStockBundle\Model;
 
+use Contao\Database;
 use Contao\Model;
 use Contao\System;
 use Isotope\Model\ProductCollection\Order;

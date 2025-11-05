@@ -44,9 +44,9 @@ class CheckBookingEvents
 
     public function __invoke(): void
     {
-        $config = System::getContainer()->getParameter('jvh.jvh_isotope_stock.config');
         /** @var Database $db */
         $db = System::importStatic('Database');
+        $db->execute("DELETE FROM `tl_isotope_stock_booking_event` WHERE booking_id NOT IN (SELECT id FROM `tl_isotope_stock_booking`); ");
         $objResult = $db->execute("SELECT * FROM `tl_isotope_stock_booking_event` LIMIT 0, 1");
         $ids = [];
         while($objResult->next()) {
