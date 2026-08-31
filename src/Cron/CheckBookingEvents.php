@@ -34,36 +34,39 @@ use Krabo\IsotopeStockBundle\Model\BookingModel;
 class CheckBookingEvents
 {
 
-    /**
-     * @param \Contao\CoreBundle\Framework\ContaoFramework $contaoFramework
-     */
-    public function __construct(ContaoFramework $contaoFramework)
-    {
-        $contaoFramework->initialize();
-    }
+  /**
+   * @param \Contao\CoreBundle\Framework\ContaoFramework $contaoFramework
+   */
+  public function __construct(ContaoFramework $contaoFramework)
+  {
+    $contaoFramework->initialize();
+  }
 
-    public function __invoke(): void
-    {
-        /** @var Database $db */
-        $db = System::importStatic('Database');
-        $db->execute("DELETE FROM `tl_isotope_stock_booking_event` WHERE booking_id NOT IN (SELECT id FROM `tl_isotope_stock_booking`); ");
-        $objResult = $db->execute("SELECT * FROM `tl_isotope_stock_booking_event` LIMIT 0, 1");
-        $ids = [];
-        while($objResult->next()) {
-            $ids[] = $objResult->id;
-            $booking = BookingModel::findByPk($objResult->booking_id);
-            if ($booking) {
-              BookingHelper::updateBalanceStatusForBooking($booking->id);
-              $event = new ManualBookingEvent($booking);
-              System::getContainer()
-                ->get('event_dispatcher')
-                ->dispatch($event, Events::MANUAL_BOOKING_EVENT);
-            }
-        }
-        if (count($ids)) {
-            $sql = "DELETE FROM `tl_isotope_stock_booking_event` WHERE `id` IN (" . implode(", ", $ids) . ")";
-            $db->execute($sql);
-            BookingHelper::updateBalanceStatusForModifiedBookings();
-        }
+  public function __invoke($cronType=null): void
+  {
+    if ($cronType=='web') {
+      return;
     }
+    /** @var Database $db */
+    $db = System::importStatic('Database');
+    $db->execute("DELETE FROM `tl_isotope_stock_booking_event` WHERE booking_id NOT IN (SELECT id FROM `tl_isotope_stock_booking`); ");
+    $objResult = $db->execute("SELECT * FROM `tl_isotope_stock_booking_event` LIMIT 0, 1");
+    $ids = [];
+    while($objResult->next()) {
+      $ids[] = $objResult->id;
+      $booking = BookingModel::findByPk($objResult->booking_id);
+      if ($booking) {
+        BookingHelper::updateBalanceStatusForBooking($booking->id);
+        $event = new ManualBookingEvent($booking);
+        System::getContainer()
+          ->get('event_dispatcher')
+          ->dispatch($event, Events::MANUAL_BOOKING_EVENT);
+      }
+    }
+    if (count($ids)) {
+      $sql = "DELETE FROM `tl_isotope_stock_booking_event` WHERE `id` IN (" . implode(", ", $ids) . ")";
+      $db->execute($sql);
+      BookingHelper::updateBalanceStatusForModifiedBookings();
+    }
+  }
 }
